@@ -1,0 +1,26 @@
+{
+  "name": "qna-sparkbot",
+  "version": "0.0.1",
+  "description": "Cisco Spark Bot to capture questions and answers. ",
+  "main": "./src/server.js",
+  "repository": "",
+  "author": "Aman Chhabra <aman.chhabra1@gmail.com>",
+  "dependencies": {
+    "async": "^0.2.10",
+    "body-parser": "^1.17.1",
+    "botkit": "git+https://github.com/achhabra2/botkit.git",
+    "ciscospark": "^0.7.93",
+    "console-stamp": "^0.2.5",
+    "express": "^4.15.2",
+    "mongoose": "^4.9.3",
+    "mongoose-paginate": "^5.0.3",
+    "node-env-file": "^0.1.8",
+    "node-uuid": "^1.4.8",
+    "promise": "^7.1.1",
+    "request": "^2.81.0",
+    "socket.io": "~0.9.14"
+  },
+  "scripts": {
+    "start": "node ./src/server.js"
+  }
+}
