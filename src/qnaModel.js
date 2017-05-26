@@ -47,6 +47,10 @@ var questionSchema = new Schema( {
         type: String,
         index: true
     },
+    starred: {
+        type: Boolean,
+        default: false
+    },
     answers: [ answerSchema ],
     createdOn: {
         type: Date,

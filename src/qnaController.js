@@ -35,6 +35,20 @@ var getRoomDetails = ( message ) => {
             return message;
         } );
 };
+
+var getRoomDetails = ( message ) => {
+    return Spark.rooms.get( message.channel )
+        .then( room => {
+            let msg = message;
+            msg.roomTitle = room.title;
+            return msg;
+        } )
+        .catch( err => {
+            console.error( err );
+            return message;
+        } );
+};
+
 // Upsert creation of room / question
 var addQuestion = ( message, room ) => {
     room.sequence += 1;
@@ -196,11 +210,60 @@ var findRoom = ( roomId ) => {
     return Room.findById( roomId ).exec();
 }
 
+var findAllRooms = () => {
+    return Room.find( {} ).exec();
+}
+
+var authenticatedRooms = ( personId ) => {
+    return new Promise( ( resolve, reject ) => {
+        findAllRooms().then( roomList => {
+            // console.log( 'found rooms: ' + roomList )
+            let total = roomList.length
+            let matched = [];
+            let counter = 0;
+            roomList.forEach( room => {
+                Spark.memberships.list( {
+                    roomId: room._id,
+                    personId: personId
+                } ).then( matchedList => {
+                    counter++
+                    if ( matchedList.items.length > 0 ) {
+                        matched.push( room )
+                    }
+                    if ( counter == total ) {
+                        resolve( matched )
+                    }
+                } )
+            } )
+        } )
+    } )
+}
+
+var checkRights = ( personId, roomId ) => {
+    let query = {
+        personId: personId,
+        roomId: roomId
+    };
+    return Spark.memberships.list( query ).then( response => {
+            if ( response.items.length > 0 )
+                return true
+            else
+                return false
+        } )
+        .catch( err => {
+            console.error( err )
+            return false
+        } )
+}
+
 module.exports = {
     handleAnswer: handleAnswer,
     handleQuestion: handleQuestion,
     listQuestions: listQuestions,
     listFilter: listFilter,
     findRoom: findRoom,
-    searchQuestions: searchQuestions
+    searchQuestions: searchQuestions,
+    findAllRooms: findAllRooms,
+    authenticatedRooms: authenticatedRooms,
+    checkRights: checkRights
 };

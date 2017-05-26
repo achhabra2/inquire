@@ -11,12 +11,12 @@ router.use( bodyParser.urlencoded( {
     extended: true
 } ) );
 
-router.route( '/' )
-    .get( ( req, res ) => {
-        res.send( 'Hello World!' );
-    } )
+let base = process.env.public_address;
+let authUrl = base + '/login';
+let errorUrl = base + '/error';
+let apiUrl = base + '/api/spaces/';
 
-router.get( '/:room', ( req, res ) => {
+router.get( '/spaces/:room', ensureAuthenticated, ensureAccessRights, ( req, res ) => {
     let room = req.params.room;
     console.log( 'Received room api query for' + room );
     let page = 1;
@@ -38,22 +38,31 @@ router.get( '/:room', ( req, res ) => {
         let prevPage = null;
         if ( page - 1 > 0 )
             prevPage = page - 1;
-        let base = 'http://localhost:3000/qna/';
         let prevPageUrl = '';
         let nextPageUrl = '';
         if ( response.pages > page )
-            nextPageUrl = base + room + '?page=' + nextPage;
+            nextPageUrl = apiUrl + room + '?page=' + nextPage;
         if ( prevPage )
-            prevPageUrl = base + room + '?page=' + prevPage;
+            prevPageUrl = apiUrl + room + '?page=' + prevPage;
         formattedResponse.next_page_url = nextPageUrl;
         formattedResponse.prev_page_url = prevPageUrl;
         res.send( formattedResponse );
     } ).catch( err => {
-        res.send( err );
+        res.status( 500 ).send( 'Error in query' );
     } );
 } );
 
-router.get( '/detail/:room', ( req, res ) => {
+router.get( '/listSpaces', ensureAuthenticated, ( req, res ) => {
+    console.log( 'Received detail api query for all rooms' );
+    qnaController.authenticatedRooms( req.user.id )
+        .then( rooms => {
+            res.json( rooms );
+        } ).catch( err => {
+            res.status( 403 ).send( 'You must first authenticate. ' );
+        } );
+} );
+
+router.get( '/spaces/detail/:room', ensureAuthenticated, ensureAccessRights, ( req, res ) => {
     let room = req.params.room;
     console.log( 'Received detail api query for' + room );
     qnaController.findRoom( room )
@@ -99,5 +108,27 @@ var formatSort = ( expression ) => {
     }
     return sort;
 };
+
+function ensureAuthenticated( req, res, next ) {
+    if ( req.isAuthenticated() ) {
+        return next();
+    }
+    res.redirect( authUrl )
+}
+
+function ensureAccessRights( req, res, next ) {
+    if ( req.params.room ) {
+        let roomId = req.params.room;
+        let personId = req.user.id;
+        qnaController.checkRights( personId, roomId ).then( rights => {
+            if ( rights )
+                return next()
+            else
+                res.redirect( errorUrl )
+        } )
+    } else {
+        res.redirect( errorUrl )
+    }
+}
 
 module.exports = router;

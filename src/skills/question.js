@@ -6,7 +6,7 @@ const qnaController = require( '../qnaController' );
 
 module.exports = function ( controller ) {
     // apiai.hears for intents. in this example is 'hello' the intent
-    controller.hears( [ '(.*)\\?$' ], 'direct_message,direct_mention', function ( bot, message ) {
+    controller.hears( [ '(.*)\\?$', '^who', '^what', '^how', '^when', '^can', '^could', '^where' ], 'direct_message,direct_mention', function ( bot, message ) {
         var mdMessage = `Ok <@personEmail:${message.user}> `;
         mdMessage += `your question: ` + `__${ message.text }__`;
         qnaController.handleQuestion( message ).then( room => {
@@ -66,7 +66,7 @@ module.exports = function ( controller ) {
         } );
     } );
     controller.hears( [ '^\s*?list' ], 'direct_message,direct_mention', function ( bot, message ) {
-        let link = process.env.public_address + '/public/?roomId=' + message.channel;
+        let link = process.env.public_address + '/public/#/space/' + message.channel;
         let mdLink = `[here](${link})`;
         let mdMessage = `<@personEmail:${message.user}> Please click ${mdLink} to view this rooms FAQ. `;
         bot.reply( message, {
