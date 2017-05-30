@@ -27,8 +27,11 @@ const qnaRouter = require( './qnaRouter' );
 const path = require( 'path' );
 const express = require( 'express' );
 
-const uiUrl = process.env.public_address + '/inquire/public/#/';
-const redirectUrl = process.env.public_address + '/inquire/auth/redirect';
+const uiUrl = process.env.public_address + '/public/#/';
+const redirectUrl = process.env.public_address + '/auth/redirect';
+
+console.log( 'Oauth RedirectUrl:' );
+console.log( redirectUrl );
 
 process.env.CISCOSPARK_ACCESS_TOKEN = process.env.access_token;
 
@@ -146,13 +149,13 @@ passport.use( sparkOauth );
 
 var app = express();
 
-app.use( logger( 'dev' ) );
+// app.use( logger( 'dev' ) );
 app.use( bodyParser.json() );
 app.use( bodyParser.urlencoded( {
     extended: true
 } ) );
 app.use( session( {
-    secret: 'keyboard cat',
+    secret: 'cisco spark',
     store: new MongoStore( {
         mongooseConnection: mongoose.connection
     } ),
@@ -180,7 +183,7 @@ app.all( '*', function ( req, res, next ) {
 } );
 
 app.get( '/', ( req, res ) => {
-    res.redirect( '/public/#/about' )
+    res.redirect( uiUrl + 'about' )
 } );
 
 app.get( '/login', ( req, res ) => {
