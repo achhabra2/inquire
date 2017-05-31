@@ -47,6 +47,9 @@ var questionSchema = new Schema( {
         type: String,
         index: true
     },
+    tags: {
+        type: String
+    },
     starred: {
         type: Boolean,
         default: false
