@@ -36,19 +36,6 @@ var getRoomDetails = ( message ) => {
         } );
 };
 
-var getRoomDetails = ( message ) => {
-    return Spark.rooms.get( message.channel )
-        .then( room => {
-            let msg = message;
-            msg.roomTitle = room.title;
-            return msg;
-        } )
-        .catch( err => {
-            console.error( err );
-            return message;
-        } );
-};
-
 // Upsert creation of room / question
 var addQuestion = ( message, room ) => {
     room.sequence += 1;
@@ -214,6 +201,14 @@ var findAllRooms = () => {
     return Room.find( {} ).exec();
 }
 
+var removeQuestion = ( id ) => {
+    return Question.findByIdAndRemove( id )
+}
+
+// var removeAnswer = ( id ) => {
+//     return Room.answers.id( id ).remove();
+// }
+
 var authenticatedRooms = ( personId ) => {
     return new Promise( ( resolve, reject ) => {
         findAllRooms().then( roomList => {
@@ -265,5 +260,6 @@ module.exports = {
     searchQuestions: searchQuestions,
     findAllRooms: findAllRooms,
     authenticatedRooms: authenticatedRooms,
-    checkRights: checkRights
+    checkRights: checkRights,
+    removeQuestion: removeQuestion
 };

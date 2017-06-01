@@ -73,6 +73,17 @@ router.get( '/spaces/detail/:room', ensureAuthenticated, ensureAccessRights, ( r
         } );
 } );
 
+router.delete( '/questions/:question', ensureAuthenticated, ( req, res ) => {
+    let question = req.params.question;
+    console.log( 'Received delete request for ' + question );
+    qnaController.removeQuestion( question )
+        .then( roomDetail => {
+            res.status( 204 ).end();
+        } ).catch( err => {
+            res.status( 400 ).end();
+        } );
+} );
+
 var handleQuery = ( response ) => {
     let entries;
     if ( response.total > response.limit * response.page )
