@@ -6,15 +6,29 @@ const qnaController = require( '../qnaController' );
 
 module.exports = function ( controller ) {
     controller.hears( [ '/a', '^\s*?answer' ], 'direct_message,direct_mention', function ( bot, message ) {
+        // console.log( 'Answer Received: ' );
+        // console.log( message );
         qnaController.handleAnswer( message ).then( response => {
             console.log( 'Handled Answer' );
             let questioner = response.personId;
-            let question = response.text;
-            let answer = response.answers[ response.answers.length - 1 ].text;
+            let question;
+            let answer;
             var answerMessage = `Hello <@personEmail:${response.personEmail}>! `;
             answerMessage += `Your question has been responded to by: <@personEmail:${response.answers[response.answers.length-1].personEmail}>. <br>`;
-            answerMessage += `Original Question: __${question}__ <br>`;
-            answerMessage += `Answer: **${answer}**. `;
+            if ( response.html ) {
+                question = response.html
+                answerMessage += `Original Question: ${question}`;
+            } else {
+                question = response.text
+                answerMessage += `Original Question: __${question}__ <br>`;
+            }
+            if ( response.answers[ response.answers.length - 1 ].html ) {
+                answer = response.answers[ response.answers.length - 1 ].html;
+                answerMessage += `Answer: ${answer}`;
+            } else {
+                answer = response.answers[ response.answers.length - 1 ].text
+                answerMessage += `Answer: **${answer}**. `;
+            }
             bot.startPrivateConversationWithPersonId( questioner, ( error, convo ) => {
                 if ( error )
                     console.error( error );
@@ -67,11 +81,15 @@ module.exports = function ( controller ) {
     } );
     controller.hears( '^(.*)', 'direct_message,direct_mention', function ( bot, message ) {
         var mdMessage = `Ok <@personEmail:${message.user}> `;
-        mdMessage += `your question: ` + `__${ message.text }__`;
+        if ( message.original_message.html ) {
+            mdMessage += `your question: ` + `${ message.original_message.html }`;
+        } else {
+            mdMessage += `your question: ` + `__${ message.text }__`;
+        }
         qnaController.handleQuestion( message ).then( room => {
                 if ( room ) {
-                    mdMessage += ' has been logged as #: ' + `**${room.sequence}**`;
-                    mdMessage += `<br>To answer this question please reply with: answer or /a + ${room.sequence} + your response. `;
+                    mdMessage += ' Has been logged as #: ' + `**${room.sequence}**`;
+                    mdMessage += `<br>To answer this question please reply with: answer or <code>/a + ${room.sequence} + your response.</code> `;
                     bot.reply( message, {
                         markdown: mdMessage
                     } );

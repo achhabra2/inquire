@@ -11,6 +11,7 @@ var answerSchema = new Schema( {
     personId: String,
     displayName: String,
     text: String,
+    html: String,
     sequence: {
         type: Number,
         default: '1'
@@ -33,6 +34,9 @@ var questionSchema = new Schema( {
     text: {
         type: String,
         index: true
+    },
+    html: {
+        type: String
     },
     sequence: {
         type: Number,

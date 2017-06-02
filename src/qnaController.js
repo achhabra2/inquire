@@ -48,7 +48,9 @@ var addQuestion = ( message, room ) => {
         sequence: room.sequence,
         createdOn: Date.now()
     } );
-
+    if ( message.original_message.html ) {
+        question.html = message.original_message.html
+    }
     return room.save().then( room => {
         console.log( 'Updated room successfully.' );
         return question.save()
@@ -75,6 +77,12 @@ var addAnswer = ( message ) => {
     const regex = /(answer|\/a)\s?(\d+)\s(\w+.*)$/i;
     let match = regex.exec( message.text );
     let sequence = Number( match[ 2 ] );
+    let htmlMatch;
+    let htmlMessage;
+    if ( message.original_message.html ) {
+        htmlMatch = regex.exec( message.original_message.html )
+        htmlMessage = '<p>' + htmlMatch[ 3 ]
+    }
     let answer = {
         personEmail: message.user,
         personId: message.original_message.personId,
@@ -82,6 +90,9 @@ var addAnswer = ( message ) => {
         text: match[ 3 ],
         createdOn: Date.now()
     };
+    if ( htmlMessage ) {
+        answer.html = htmlMessage
+    }
     let query = {
         _room: message.channel,
         sequence: sequence
