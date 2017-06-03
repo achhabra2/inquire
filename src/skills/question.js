@@ -89,7 +89,7 @@ module.exports = function ( controller ) {
         qnaController.handleQuestion( message ).then( room => {
                 if ( room ) {
                     mdMessage += ' Has been logged as #: ' + `**${room.sequence}**`;
-                    mdMessage += `<br>To answer this question please reply with: answer or <code>/a ${room.sequence} [your response].</code> `;
+                    mdMessage += `<br>To answer this question please reply with: answer or <code>@Inquire /a ${room.sequence} [your response].</code> `;
                     bot.reply( message, {
                         markdown: mdMessage
                     } );
