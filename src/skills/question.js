@@ -17,7 +17,7 @@ module.exports = function ( controller ) {
             answerMessage += `Your question has been responded to by: <@personEmail:${response.answers[response.answers.length-1].personEmail}>. <br>`;
             if ( response.html ) {
                 question = response.html
-                answerMessage += `Original Question: ${question}`;
+                answerMessage += `Original Question: ${question}<br>`;
             } else {
                 question = response.text
                 answerMessage += `Original Question: __${question}__ <br>`;
@@ -82,14 +82,14 @@ module.exports = function ( controller ) {
     controller.hears( '^(.*)', 'direct_message,direct_mention', function ( bot, message ) {
         var mdMessage = `Ok <@personEmail:${message.user}> `;
         if ( message.original_message.html ) {
-            mdMessage += `your question: ` + `${ message.original_message.html }`;
+            mdMessage += `your question: ` + `${ message.original_message.html.substring(3,message.original_message.html.length-4) }`;
         } else {
             mdMessage += `your question: ` + `__${ message.text }__`;
         }
         qnaController.handleQuestion( message ).then( room => {
                 if ( room ) {
                     mdMessage += ' Has been logged as #: ' + `**${room.sequence}**`;
-                    mdMessage += `<br>To answer this question please reply with: answer or <code>/a + ${room.sequence} + your response.</code> `;
+                    mdMessage += `<br>To answer this question please reply with: answer or <code>/a ${room.sequence} [your response].</code> `;
                     bot.reply( message, {
                         markdown: mdMessage
                     } );
