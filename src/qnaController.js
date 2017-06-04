@@ -49,7 +49,7 @@ var addQuestion = ( message, room ) => {
         createdOn: Date.now()
     } );
     if ( message.original_message.html ) {
-        question.html = message.original_message.html.substring( 3, message.original_message.html.length - 4 )
+        question.html = message.original_message.html
     }
     return room.save().then( room => {
         console.log( 'Updated room successfully.' );
@@ -81,7 +81,7 @@ var addAnswer = ( message ) => {
     let htmlMessage;
     if ( message.original_message.html ) {
         htmlMatch = regex.exec( message.original_message.html )
-        htmlMessage = htmlMatch[ 3 ].substring( 0, htmlMatch[ 3 ].length - 4 );
+        htmlMessage = htmlMatch[ 3 ];
     }
     let answer = {
         personEmail: message.user,

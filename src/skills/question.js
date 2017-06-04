@@ -2,12 +2,19 @@
 
 const qnaController = require( '../qnaController' );
 // Connection Strings to MongoDB Instance
-
+const reg1 = /(\<p\>)/i;
+const reg2 = /(\<\/p\>)/i;
+const reg3 = /(\<spark\-mention.*Inquire\<\/spark-mention\>)/i;
 
 module.exports = function ( controller ) {
     controller.hears( [ '/a', '^\s*?answer' ], 'direct_message,direct_mention', function ( bot, message ) {
-        // console.log( 'Answer Received: ' );
-        // console.log( message );
+        var filterHtml;
+        if ( message.original_message.html ) {
+            filterHtml = message.original_message.html.replace( reg3, '' ).replace( reg1, '' ).replace( reg2, '' );
+            message.original_message.html = filterHtml;
+        }
+        console.log( 'Answer Received: ' );
+        console.log( message );
         qnaController.handleAnswer( message ).then( response => {
             console.log( 'Handled Answer' );
             let questioner = response.personId;
@@ -81,8 +88,11 @@ module.exports = function ( controller ) {
     } );
     controller.hears( '^(.*)', 'direct_message,direct_mention', function ( bot, message ) {
         var mdMessage = `Ok <@personEmail:${message.user}> `;
+        var filterHtml;
         if ( message.original_message.html ) {
-            mdMessage += `your question: ` + `${ message.original_message.html.substring(3,message.original_message.html.length-4) }`;
+            filterHtml = message.original_message.html.replace( reg3, '' ).replace( reg1, '' ).replace( reg2, '' );
+            message.original_message.html = filterHtml;
+            mdMessage += `your question: ` + `${ message.original_message.html }`;
         } else {
             mdMessage += `your question: ` + `__${ message.text }__`;
         }
