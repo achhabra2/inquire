@@ -7,7 +7,7 @@ const reg2 = /(\<\/p\>)/i;
 const reg3 = /(\<spark\-mention.*Inquire\<\/spark-mention\>)/i;
 
 module.exports = function ( controller ) {
-    controller.hears( [ '/a', '^\s*?answer' ], 'direct_message,direct_mention', function ( bot, message ) {
+    controller.hears( [ '/a', '^\s*?answer', 'Inquire(.*)answer(.+)' ], 'direct_message,direct_mention', function ( bot, message ) {
         var filterHtml;
         if ( message.original_message.html ) {
             filterHtml = message.original_message.html.replace( reg3, '' ).replace( reg1, '' ).replace( reg2, '' );
@@ -55,7 +55,7 @@ module.exports = function ( controller ) {
             } );
         } );
     } );
-    controller.hears( [ '^\s*?list' ], 'direct_message,direct_mention', function ( bot, message ) {
+    controller.hears( [ '^\s*?list', '\/list', 'list$' ], 'direct_message,direct_mention', function ( bot, message ) {
         let link = process.env.public_address + '/public/#/space/' + message.channel;
         let mdLink = `[here](${link})`;
         let mdMessage = `<@personEmail:${message.user}> Please click ${mdLink} to view this rooms FAQ. `;
@@ -63,7 +63,7 @@ module.exports = function ( controller ) {
             markdown: mdMessage
         } );
     } );
-    controller.hears( [ '^\s*?open' ], 'direct_message,direct_mention', function ( bot, message ) {
+    controller.hears( [ '^\s*?open', '\/open', 'open$' ], 'direct_message,direct_mention', function ( bot, message ) {
         qnaController.listQuestions( message.channel, 'unanswered' ).then( response => {
             let mdMessage;
             let link = process.env.public_address + '/public/#/space/' + message.channel;
@@ -85,6 +85,8 @@ module.exports = function ( controller ) {
         } )
     } );
     controller.hears( '^(.*)', 'direct_message,direct_mention', function ( bot, message ) {
+        console.log( 'Debugging list command: ' )
+        console.log( message )
         var mdMessage = `Ok <@personEmail:${message.user}> `;
         var filterHtml;
         if ( message.original_message.html ) {
