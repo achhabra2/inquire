@@ -13,8 +13,6 @@ module.exports = function ( controller ) {
             filterHtml = message.original_message.html.replace( reg3, '' ).replace( reg1, '' ).replace( reg2, '' );
             message.original_message.html = filterHtml;
         }
-        console.log( 'Answer Received: ' );
-        console.log( message );
         qnaController.handleAnswer( message ).then( response => {
             console.log( 'Handled Answer' );
             let questioner = response.personId;
@@ -45,7 +43,7 @@ module.exports = function ( controller ) {
                 } );
             } );
             var mdMessage = `Ok <@personEmail:${message.user}> `;
-            mdMessage += `your has answer been logged.`;
+            mdMessage += `your answer has been logged.`;
             console.log( 'Received Answer' );
             bot.reply( message, {
                 markdown: mdMessage
