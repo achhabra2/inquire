@@ -85,21 +85,32 @@ module.exports = function ( controller ) {
         } )
     } );
     controller.hears( '^(.*)', 'direct_message,direct_mention', function ( bot, message ) {
-        var mdMessage = `Ok <@personEmail:${message.user}> `;
+        var personalMessage;
+        var mdMessage = `Ok <@personEmail:${message.user}> `
         var filterHtml;
         if ( message.original_message.html ) {
             filterHtml = message.original_message.html.replace( reg3, '' ).replace( reg1, '' ).replace( reg2, '' );
             message.original_message.html = filterHtml;
-            mdMessage += `your question: ` + `${ message.original_message.html }`;
+            personalMessage = `Your question: ` + `${ message.original_message.html }`;
         } else {
-            mdMessage += `your question: ` + `__${ message.text }__`;
+            personalMessage = `Your question: ` + `__${ message.text }__`;
         }
+        let questioner = message.original_message.personId;
         qnaController.handleQuestion( message ).then( room => {
                 if ( room ) {
-                    mdMessage += ' Has been logged as #: ' + `**${room.sequence}**`;
+                    personalMessage += ' has been logged. '
+                    mdMessage += ' ? was logged as #: ' + `**${room.sequence}**`;
                     mdMessage += `<br>To answer this question please reply with: answer or <code>@Inquire /a ${room.sequence} [your response].</code> `;
                     bot.reply( message, {
                         markdown: mdMessage
+                    } );
+                    bot.startPrivateConversationWithPersonId( questioner, ( error, convo ) => {
+                        if ( error )
+                            console.error( error );
+                        convo.say( {
+                            text: personalMessage,
+                            markdown: personalMessage
+                        } );
                     } );
                     console.log( 'Handled question successfully. ' );
                 } else {

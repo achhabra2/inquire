@@ -65,13 +65,13 @@ var bot = controller.spawn( {} );
 // } );
 
 passport.serializeUser( function ( user, done ) {
-    console.log( 'serializing' );
+    // console.log( 'serializing' );
     // console.log( user );
     done( null, user );
 } );
 
 passport.deserializeUser( function ( obj, done ) {
-    console.log( 'deserializing' );
+    // console.log( 'deserializing' );
     // sparkUser.findById(obj.id).then(user => {
     //   done(null, user)
     // })
