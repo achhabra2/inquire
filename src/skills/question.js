@@ -85,8 +85,6 @@ module.exports = function ( controller ) {
         } )
     } );
     controller.hears( '^(.*)', 'direct_message,direct_mention', function ( bot, message ) {
-        console.log( 'Debugging list command: ' )
-        console.log( message )
         var mdMessage = `Ok <@personEmail:${message.user}> `;
         var filterHtml;
         if ( message.original_message.html ) {
