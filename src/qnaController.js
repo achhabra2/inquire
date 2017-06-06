@@ -52,6 +52,20 @@ var updateRoomMemberships = ( roomId ) => {
         } )
 }
 
+var handleMembershipChange = ( data ) => {
+    return checkRoom( data ).then( ( room ) => {
+            if ( room )
+                return updateRoomMemberships( data.original_message.data.roomId )
+            else {
+                console.log( 'Existing room not found' )
+                return null
+            }
+        } )
+        .catch( err => {
+            console.error( 'Could not check room and Update memberships' )
+        } )
+}
+
 var getUserDetails = ( message ) => {
     return Spark.people.get( message.original_message.personId )
         .then( person => {
@@ -308,7 +322,6 @@ var checkRights = ( personId, roomId ) => {
         } )
 }
 
-
 module.exports = {
     handleAnswer: handleAnswer,
     handleQuestion: handleQuestion,
@@ -320,6 +333,5 @@ module.exports = {
     authenticatedRooms: authenticatedRooms,
     checkRights: checkRights,
     removeQuestion: removeQuestion,
-    updateRoomActivity: updateRoomActivity,
-    updateRoomMemberships: updateRoomMemberships
+    handleMembershipChange: handleMembershipChange
 };

@@ -131,17 +131,11 @@ module.exports = function ( controller ) {
             } );
     } );
     controller.on( 'user_space_join', function ( bot, data ) {
-        let personId = data.original_message.data.personId
-        let roomId = data.original_message.data.roomId
+        qnaController.handleMembershipChange( data )
         console.log( 'Person Joined' )
-        qnaController.updateRoomActivity( roomId )
-        qnaController.updateRoomMemberships( roomId )
     } );
     controller.on( 'user_space_leave', function ( bot, data ) {
-        let personId = data.original_message.data.personId
-        let roomId = data.original_message.data.roomId
-        console.log( 'Person Joined' )
-        qnaController.updateRoomActivity( roomId )
-        qnaController.updateRoomMemberships( roomId )
+        console.log( 'Person Left' )
+        qnaController.handleMembershipChange( data )
     } );
 }
