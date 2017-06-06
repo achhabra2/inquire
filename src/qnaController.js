@@ -208,11 +208,7 @@ var handleAnswer = ( message ) => {
 };
 
 var listQuestions = ( roomId, filter, sort = 'sequence', limit = 10, page = 1, search = null ) => {
-    if ( filter == 'unanswered' )
-        return listFilter( roomId, false, sort, limit, page );
-    if ( filter == 'answered' )
-        return listFilter( roomId, true, sort, limit, page );
-    if ( search )
+    if ( search || filter )
         return searchQuestions( roomId, filter, sort, limit, page, search );
     else {
         var response = {};
@@ -242,13 +238,28 @@ var listFilter = ( roomId, filter, sort = 'sequence', limit = 10, page = 1 ) => 
     return Question.paginate( query, options );
 };
 
-var searchQuestions = ( roomId, filter = true, sort = 'sequence', limit = 10, page = 1, search ) => {
+var searchQuestions = ( roomId, filter, sort = 'sequence', limit = 10, page = 1, search ) => {
+    let answered
+    if ( filter == 'unanswered' ) {
+        answered = {
+            $ne: true
+        }
+    } else if ( filter == 'answered' ) {
+        answered = {
+            $ne: false
+        }
+    }
     var query = {
         _room: roomId,
-        $text: {
+    };
+    if ( answered ) {
+        query.answered = answered
+    }
+    if ( search ) {
+        query.$text = {
             $search: search
         }
-    };
+    }
     var options = {
         limit: limit,
         page: page,

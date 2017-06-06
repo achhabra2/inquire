@@ -24,6 +24,9 @@ router.get( '/spaces/:room', ensureAuthenticated, ensureAccessRights, ( req, res
     let search;
     let sort = 'createdOn';
     let filter;
+    if ( req.query.answers ) {
+        filter = req.query.answers
+    }
     if ( req.query.page )
         page = Number( req.query.page );
     if ( req.query.per_page )
