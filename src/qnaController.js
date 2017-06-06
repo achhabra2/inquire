@@ -28,6 +28,9 @@ var getRoomDetails = ( message ) => {
         .then( room => {
             let msg = message;
             msg.roomTitle = room.title;
+            if ( room.teamId ) {
+                msg.roomTeamId = room.teamId
+            }
             return msg;
         } )
         .catch( err => {
@@ -39,6 +42,7 @@ var getRoomDetails = ( message ) => {
 // Upsert creation of room / question
 var addQuestion = ( message, room ) => {
     room.sequence += 1;
+    room.lastActivity = Date.now();
     let question = new Question( {
         _room: message.channel,
         personEmail: message.user,
@@ -69,6 +73,9 @@ var createRoom = ( message ) => {
         orgId: message.original_message.orgId,
         displayName: ( message.roomTitle || 'Unknown' )
     } );
+    if ( message.roomTeamId ) {
+        newRoom.teamId = message.roomTeamId
+    }
     return newRoom.save();
 };
 
@@ -76,6 +83,8 @@ var createRoom = ( message ) => {
 var addAnswer = ( message ) => {
     const regex = /(answer|\/a)\s?(\d+)\s(\w+.*)$/i;
     let match = regex.exec( message.text );
+    // console.log( 'Answer debug..' )
+    // console.log( match )
     let sequence = Number( match[ 2 ] );
     let htmlMatch;
     let htmlMessage;
@@ -261,6 +270,7 @@ var checkRights = ( personId, roomId ) => {
             return false
         } )
 }
+
 
 module.exports = {
     handleAnswer: handleAnswer,

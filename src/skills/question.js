@@ -8,6 +8,8 @@ const reg3 = /(\<spark\-mention.*Inquire\<\/spark-mention\>)/i;
 
 module.exports = function ( controller ) {
     controller.hears( [ '/a', '^\s*?answer', 'Inquire(.*)answer(.+)' ], 'direct_message,direct_mention', function ( bot, message ) {
+        // console.log( 'Debugging answer: ' )
+        // console.log( message )
         var filterHtml;
         if ( message.original_message.html ) {
             filterHtml = message.original_message.html.replace( reg3, '' ).replace( reg1, '' ).replace( reg2, '' );

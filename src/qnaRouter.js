@@ -73,6 +73,11 @@ router.get( '/spaces/detail/:room', ensureAuthenticated, ensureAccessRights, ( r
         } );
 } );
 
+router.get( '/updateSpaces', ( req, res ) => {
+    qnaController.updateRoomInfo()
+    res.status( 200 ).end();
+} );
+
 router.delete( '/questions/:question', ensureAuthenticated, ( req, res ) => {
     let question = req.params.question;
     console.log( 'Received delete request for ' + question );

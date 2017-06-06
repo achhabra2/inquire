@@ -83,6 +83,10 @@ var qnaRoomSchema = new Schema( {
         default: '0'
     },
     tags: String,
+    teamId: String,
+    teamName: String,
+    lastActivity: Date,
+    memberships: [ String ],
     createdOn: {
         type: Date,
         default: Date.now()
