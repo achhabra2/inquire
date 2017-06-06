@@ -218,7 +218,7 @@ var findRoom = ( roomId ) => {
 }
 
 var findAllRooms = () => {
-    return Room.find( {} ).exec();
+    return Room.find( {} ).sort( '-lastActivity' ).exec();
 }
 
 var removeQuestion = ( id ) => {

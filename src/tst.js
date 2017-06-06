@@ -3,7 +3,7 @@ const Question = require( './qnaModel' ).Question;
 const Spark = require( 'ciscospark' ).init( {
     credentials: {
         authorization: {
-            access_token: process.env.
+            access_token: process.env.access_token
         }
     }
 } );
@@ -19,26 +19,32 @@ if ( process.env.NODE_ENV != 'production' ) {
     env( './.env' );
 }
 
+function delay( t ) {
+    return new Promise( function ( resolve ) {
+        setTimeout( resolve, t )
+    } );
+}
+
 
 var updateRoomInfo = () => {
-    findAllRooms().then( roomList => {
+    Room.find( {} ).exec().then( roomList => {
         roomList.forEach( room => {
             Spark.rooms.get( room._id ).then( roomDetail => {
                     room.displayName = roomDetail.title;
                     room.lastActivity = roomDetail.lastActivity;
                     if ( roomDetail.teamId ) {
-                        console.log( 'Room Team Detail: ' )
-                        console.log( roomDetail )
                         room.teamId = roomDetail.teamId
-                        Spark.teams.get( roomDetail.teamId ).then( teamDetail => {
-                                room.teamName = teamDetail.name
-                                room.save()
-                                console.log( 'Saved room with team' )
-                            } )
-                            .catch( err => {
-                                console.error( 'Error getting team from Spark' )
-                                console.error( err )
-                            } )
+                        delay( 10000 ).then( () => {
+                            Spark.teams.get( roomDetail.teamId ).then( teamDetail => {
+                                    room.teamName = teamDetail.name
+                                    room.save()
+                                    console.log( 'Saved room with team' )
+                                } )
+                                .catch( err => {
+                                    console.log( err )
+                                    console.error( 'Error getting team from Spark' )
+                                } )
+                        } )
                     } else {
                         room.save()
                         console.log( 'Saved room' )
@@ -52,11 +58,32 @@ var updateRoomInfo = () => {
     } )
 }
 
+function getMemberships() {
+    Room.find( {} ).sort( '-lastActivity' ).exec().then( roomList => {
+        roomList.forEach( room => {
+            Spark.memberships.list( {
+                    roomId: room._id,
+                } ).then( response => {
+                    var memberArray = []
+                    response.items.forEach( member => {
+                        memberArray.push( member.personId )
+                    } )
+                    room.memberships = memberArray
+                    return room.save()
+                } )
+                .then( savedRoom => {
+                    console.log( 'Saved Room: ' )
+                    console.log( savedRoom )
+                } )
+        } )
+    } )
+}
+
 const mongoose = require( 'mongoose' );
 // Connection Strings to MongoDB Instance
 mongoose.Promise = global.Promise;
 mongoose.connect( process.env.mongo ).then( ( err ) => {
     if ( err )
         console.error( err );
-    qna.updateRoomInfo()
+    getMemberships()
 } );

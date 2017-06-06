@@ -130,4 +130,9 @@ module.exports = function ( controller ) {
                 } );
             } );
     } );
-};
+    controller.on( 'user_space_join', function ( bot, data ) {
+        let personId = data.original_message.data.personId
+        let roomId = data.original_message.data.roomId
+        console.log( 'Person Joined' )
+    } );
+}
