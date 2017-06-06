@@ -10,6 +10,48 @@ const Spark = require( 'ciscospark' ).init( {
     }
 } );
 
+var updateRoomActivity = ( roomId ) => {
+    return Room.findById( roomId ).exec().then( room => {
+            room.lastActivity = Date.now()
+            return room.save()
+        } )
+        .then( savedRoom => {
+            console.log( 'Updated Activity: ' + savedRoom.displayName )
+            return savedRoom
+        } )
+        .catch( err => {
+            console.error( 'Error updating Room Activity' )
+            console.error( err )
+        } )
+}
+
+var updateRoomMemberships = ( roomId ) => {
+    return Room.findById( roomId ).exec().then( room => {
+            return Spark.memberships.list( {
+                    roomId: roomId,
+                    max: 999
+                } ).then( response => {
+                    var memberArray = []
+                    response.items.forEach( member => {
+                        memberArray.push( member.personId )
+                    } )
+                    room.memberships = memberArray
+                    return room.save()
+                } )
+                .catch( err => {
+                    console.error( 'Error getting Room Memberships' )
+                    console.error( err )
+                } )
+        } )
+        .then( savedRoom => {
+            console.log( 'Updated Room Memberships: ' + savedRoom.displayName )
+            return savedRoom
+        } )
+        .catch( err => {
+            console.log( 'Error saving Room Memberships ' )
+        } )
+}
+
 var getUserDetails = ( message ) => {
     return Spark.people.get( message.original_message.personId )
         .then( person => {
@@ -140,6 +182,7 @@ var handleQuestion = ( message ) => {
                     return createRoom( updatedMessage );
                 } )
                 .then( room => {
+                    updateRoomMemberships( room._id )
                     return handleQuestion( message );
                 } );
     } );
@@ -147,6 +190,7 @@ var handleQuestion = ( message ) => {
 
 var handleAnswer = ( message ) => {
     var msg = message;
+    updateRoomActivity( message.original_message.roomId )
     return getUserDetails( msg )
         .then( updatedMessage => {
             return addAnswer( updatedMessage );
@@ -230,28 +274,10 @@ var removeQuestion = ( id ) => {
 // }
 
 var authenticatedRooms = ( personId ) => {
-    return new Promise( ( resolve, reject ) => {
-        findAllRooms().then( roomList => {
-            // console.log( 'found rooms: ' + roomList )
-            let total = roomList.length
-            let matched = [];
-            let counter = 0;
-            roomList.forEach( room => {
-                Spark.memberships.list( {
-                    roomId: room._id,
-                    personId: personId
-                } ).then( matchedList => {
-                    counter++
-                    if ( matchedList.items.length > 0 ) {
-                        matched.push( room )
-                    }
-                    if ( counter == total ) {
-                        resolve( matched )
-                    }
-                } )
-            } )
-        } )
-    } )
+    return Room.find( {} ).select( '_id displayName lastActivity teamName' )
+        .where( 'memberships' )
+        .in( [ personId ] )
+        .sort( '-lastActivity' ).exec()
 }
 
 var checkRights = ( personId, roomId ) => {
@@ -282,5 +308,7 @@ module.exports = {
     findAllRooms: findAllRooms,
     authenticatedRooms: authenticatedRooms,
     checkRights: checkRights,
-    removeQuestion: removeQuestion
+    removeQuestion: removeQuestion,
+    updateRoomActivity: updateRoomActivity,
+    updateRoomMemberships: updateRoomMemberships
 };

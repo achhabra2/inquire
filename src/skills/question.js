@@ -134,5 +134,14 @@ module.exports = function ( controller ) {
         let personId = data.original_message.data.personId
         let roomId = data.original_message.data.roomId
         console.log( 'Person Joined' )
+        qnaController.updateRoomActivity( roomId )
+        qnaController.updateRoomMemberships( roomId )
+    } );
+    controller.on( 'user_space_leave', function ( bot, data ) {
+        let personId = data.original_message.data.personId
+        let roomId = data.original_message.data.roomId
+        console.log( 'Person Joined' )
+        qnaController.updateRoomActivity( roomId )
+        qnaController.updateRoomMemberships( roomId )
     } );
 }
