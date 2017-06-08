@@ -173,7 +173,7 @@ var addAnswer = ( message ) => {
 
 // Find the answer to a specific question.
 var findQuestion = ( message ) => {
-    const regex = /(answer|\/a)\s?(\d+)\s(\w+.*)$/i;
+    const regex = /(answer|\/a\/?)\s+?(\d+)\s+(\w+.*)$/i;
     let match = regex.exec( message.text );
     let sequence = Number( match[ 2 ] );
     let query = {
