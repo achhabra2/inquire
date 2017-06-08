@@ -6,10 +6,14 @@ const reg1 = /(\<p\>)/i;
 const reg2 = /(\<\/p\>)/i;
 const reg3 = /(\<spark\-mention.*Inquire\<\/spark-mention\>)/i;
 
+
 module.exports = function ( controller ) {
     controller.hears( [ '/a', '^\s*?answer', 'Inquire(.*)answer(.+)' ], 'direct_message,direct_mention', function ( bot, message ) {
         // console.log( 'Debugging answer: ' )
         // console.log( message )
+        let link = process.env.public_address + '/public/#/space/' + message.channel;
+        let mdLink = `[here](${link})`;
+
         var filterHtml;
         if ( message.original_message.html ) {
             filterHtml = message.original_message.html.replace( reg3, '' ).replace( reg1, '' ).replace( reg2, '' );
@@ -45,7 +49,7 @@ module.exports = function ( controller ) {
                 } );
             } );
             var mdMessage = `Ok <@personEmail:${message.user}> `;
-            mdMessage += `your answer has been logged.`;
+            mdMessage += `your answer has been logged. Click ${mdLink} to view FAQ.`;
             console.log( 'Received Answer' );
             bot.reply( message, {
                 markdown: mdMessage
@@ -69,7 +73,7 @@ module.exports = function ( controller ) {
         qnaController.listQuestions( message.channel, 'unanswered' ).then( response => {
             let mdMessage;
             let link = process.env.public_address + '/public/#/space/' + message.channel;
-            let mdLink = `[more](${link})`;
+            let mdLink = `[here](${link})`;
             if ( response.docs.length > 0 ) {
                 mdMessage = `<@personEmail:${message.user}> Here are the last 10 unanswered questions: <br>`;
                 response.docs.forEach( ( doc, index ) => {
@@ -87,6 +91,8 @@ module.exports = function ( controller ) {
         } )
     } );
     controller.hears( '^(.*)', 'direct_message,direct_mention', function ( bot, message ) {
+        let link = process.env.public_address + '/public/#/space/' + message.channel;
+        let mdLink = `[here](${link})`;
         var personalMessage;
         var mdMessage = `Ok <@personEmail:${message.user}> `
         var filterHtml;
@@ -102,7 +108,7 @@ module.exports = function ( controller ) {
                 if ( room ) {
                     personalMessage += ' has been logged. '
                     mdMessage += ' ? was logged as #: ' + `**${room.sequence}**`;
-                    mdMessage += `<br>To answer this question please reply with: answer or <code>@Inquire /a ${room.sequence} [your response].</code> `;
+                    mdMessage += `<br>To answer this question please reply ${mdLink} or with: answer or <code>@Inquire /a ${room.sequence} [your response].</code> `;
                     bot.reply( message, {
                         markdown: mdMessage
                     } );

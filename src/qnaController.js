@@ -10,6 +10,8 @@ const Spark = require( 'ciscospark' ).init( {
     }
 } );
 
+const answerRegex = /(answer|\/a\/?)\s+?(\d+)\s+(?:\-\s+)?(\w+.*)$/i;
+
 var updateRoomActivity = ( roomId ) => {
     return Room.findById( roomId ).exec().then( room => {
             room.lastActivity = Date.now()
@@ -137,15 +139,14 @@ var createRoom = ( message ) => {
 
 // Add the answer object to the question object
 var addAnswer = ( message ) => {
-    const regex = /(answer|\/a\/?)\s+?(\d+)\s+(\w+.*)$/i;
-    let match = regex.exec( message.text );
+    let match = answerRegex.exec( message.text );
     // console.log( 'Answer debug..' )
     // console.log( match )
     let sequence = Number( match[ 2 ] );
     let htmlMatch;
     let htmlMessage;
     if ( message.original_message.html ) {
-        htmlMatch = regex.exec( message.original_message.html )
+        htmlMatch = answerRegex.exec( message.original_message.html )
         htmlMessage = htmlMatch[ 3 ];
     }
     let answer = {
@@ -173,8 +174,7 @@ var addAnswer = ( message ) => {
 
 // Find the answer to a specific question.
 var findQuestion = ( message ) => {
-    const regex = /(answer|\/a\/?)\s+?(\d+)\s+(\w+.*)$/i;
-    let match = regex.exec( message.text );
+    let match = answerRegex.exec( message.text );
     let sequence = Number( match[ 2 ] );
     let query = {
         _room: message.channel,
@@ -299,7 +299,7 @@ var removeQuestion = ( id ) => {
 // }
 
 var authenticatedRooms = ( personId ) => {
-    return Room.find( {} ).select( '_id displayName lastActivity teamName' )
+    return Room.find( {} ).select( '_id displayName lastActivity teamName sequence' )
         .where( 'memberships' )
         .in( [ personId ] )
         .sort( '-lastActivity' ).exec()
