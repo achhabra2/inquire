@@ -137,7 +137,7 @@ var createRoom = ( message ) => {
 
 // Add the answer object to the question object
 var addAnswer = ( message ) => {
-    const regex = /(answer|\/a)\s?(\d+)\s(\w+.*)$/i;
+    const regex = /(answer|\/a\/?)\s+?(\d+)\s+(\w+.*)$/i;
     let match = regex.exec( message.text );
     // console.log( 'Answer debug..' )
     // console.log( match )
