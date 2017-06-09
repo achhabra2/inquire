@@ -10,7 +10,7 @@ const Spark = require( 'ciscospark' ).init( {
     }
 } );
 
-const answerRegex = /(answer|\/a\/?)\s+?(\d+)\s+(?:\-\s+)?(\w+.*)$/i;
+const answerRegex = /(answer|\/a\/?)(?:\s+)?(\d+)\s+(?:\-\s+)?(\w+.*)$/i;
 
 var updateRoomActivity = ( roomId ) => {
     return Room.findById( roomId ).exec().then( room => {
@@ -238,20 +238,6 @@ var listQuestions = ( roomId, filter, sort = 'sequence', limit = 10, page = 1, s
     }
 };
 
-var listFilter = ( roomId, filter, sort = 'sequence', limit = 10, page = 1 ) => {
-    var response = {};
-    var query = {
-        _room: roomId,
-        answered: filter
-    };
-    var options = {
-        limit: limit,
-        page: page,
-        sort: sort
-    };
-    return Question.paginate( query, options );
-};
-
 var searchQuestions = ( roomId, filter, sort = 'sequence', limit = 10, page = 1, search ) => {
     let answered
     if ( filter == 'unanswered' ) {
@@ -326,7 +312,6 @@ module.exports = {
     handleAnswer: handleAnswer,
     handleQuestion: handleQuestion,
     listQuestions: listQuestions,
-    listFilter: listFilter,
     findRoom: findRoom,
     searchQuestions: searchQuestions,
     findAllRooms: findAllRooms,

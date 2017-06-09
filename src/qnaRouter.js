@@ -22,7 +22,7 @@ router.get( '/spaces/:room', ensureAuthenticated, ensureAccessRights, ( req, res
     let page = 1;
     let limit = 10;
     let search;
-    let sort = 'createdOn';
+    let sort = '-createdOn';
     let filter;
     if ( req.query.answers ) {
         filter = req.query.answers
@@ -123,7 +123,7 @@ var formatSort = ( expression ) => {
     } else if ( match && match[ 3 ] == 'asc' ) {
         sort = '-' + match[ 1 ];
     } else {
-        sort = 'createdOn';
+        sort = '-createdOn';
     }
     return sort;
 };

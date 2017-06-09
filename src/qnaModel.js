@@ -32,8 +32,7 @@ var questionSchema = new Schema( {
     personId: String,
     displayName: String,
     text: {
-        type: String,
-        index: true
+        type: String
     },
     html: {
         type: String

@@ -8,7 +8,7 @@ const reg3 = /(\<spark\-mention.*Inquire\<\/spark-mention\>)/i;
 
 
 module.exports = function ( controller ) {
-    controller.hears( [ '/a', '^\s*?answer', 'Inquire(.*)answer(.+)' ], 'direct_message,direct_mention', function ( bot, message ) {
+    controller.hears( [ /\/a/i, /^\s*?answer/i, /Inquire(.*)answer(.+)/i ], 'direct_message,direct_mention', function ( bot, message ) {
         // console.log( 'Debugging answer: ' )
         // console.log( message )
         let link = process.env.public_address + '/public/#/space/' + message.channel;
@@ -48,8 +48,8 @@ module.exports = function ( controller ) {
                     markdown: answerMessage
                 } );
             } );
-            var mdMessage = `Ok <@personEmail:${message.user}> `;
-            mdMessage += `your answer has been logged. Click ${mdLink} to view FAQ.`;
+            var mdMessage = `<@personEmail:${message.user}>, `;
+            mdMessage += `your answer has been logged. Click ${mdLink} to view all FAQ.`;
             console.log( 'Received Answer' );
             bot.reply( message, {
                 markdown: mdMessage
@@ -61,7 +61,7 @@ module.exports = function ( controller ) {
             } );
         } );
     } );
-    controller.hears( [ '^\s*?list', '\/list', 'list$' ], 'direct_message,direct_mention', function ( bot, message ) {
+    controller.hears( [ /^\s*?list/i, /\/list/i, /list$/i ], 'direct_message,direct_mention', function ( bot, message ) {
         let link = process.env.public_address + '/public/#/space/' + message.channel;
         let mdLink = `[here](${link})`;
         let mdMessage = `<@personEmail:${message.user}> Please click ${mdLink} to view this rooms FAQ. `;
@@ -69,7 +69,7 @@ module.exports = function ( controller ) {
             markdown: mdMessage
         } );
     } );
-    controller.hears( [ '^\s*?open', '\/open', 'open$' ], 'direct_message,direct_mention', function ( bot, message ) {
+    controller.hears( [ /^\s*?open/i, /\/open/i, /open$/i ], 'direct_message,direct_mention', function ( bot, message ) {
         qnaController.listQuestions( message.channel, 'unanswered' ).then( response => {
             let mdMessage;
             let link = process.env.public_address + '/public/#/space/' + message.channel;
@@ -90,7 +90,9 @@ module.exports = function ( controller ) {
             } );
         } )
     } );
-    controller.hears( '^(.*)', 'direct_message,direct_mention', function ( bot, message ) {
+    controller.hears( /^(.*)/i, 'direct_message,direct_mention', function ( bot, message ) {
+        // console.log( 'Debugging' )
+        // console.log( message )
         let link = process.env.public_address + '/public/#/space/' + message.channel;
         let mdLink = `[here](${link})`;
         var personalMessage;
@@ -108,7 +110,7 @@ module.exports = function ( controller ) {
                 if ( room ) {
                     personalMessage += ' has been logged. '
                     mdMessage += ' ? was logged as #: ' + `**${room.sequence}**`;
-                    mdMessage += `<br>To answer this question please reply ${mdLink} or with: answer or <code>@Inquire /a ${room.sequence} [your response].</code> `;
+                    mdMessage += `<br>To answer this question please reply ${mdLink} or with: <code>@Inquire /a ${room.sequence} [your response].</code> `;
                     bot.reply( message, {
                         markdown: mdMessage
                     } );
