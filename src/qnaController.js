@@ -139,7 +139,7 @@ var createRoom = ( message ) => {
 
 // Add the answer object to the question object
 var addAnswer = ( message ) => {
-    let match = answerRegex.exec( message.text );
+    let match = answerRegex.exec( message.original_message.text );
     // console.log( 'Answer debug..' )
     // console.log( match )
     let sequence = Number( match[ 2 ] );
@@ -174,7 +174,7 @@ var addAnswer = ( message ) => {
 
 // Find the answer to a specific question.
 var findQuestion = ( message ) => {
-    let match = answerRegex.exec( message.text );
+    let match = answerRegex.exec( message.original_message.text );
     let sequence = Number( match[ 2 ] );
     let query = {
         _room: message.channel,
