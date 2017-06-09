@@ -4,7 +4,7 @@ const qnaController = require( '../qnaController' );
 // remove html formatting for Spark Messages
 const reg1 = /(\<p\>)/i;
 const reg2 = /(\<\/p\>)/i;
-const reg3 = /(\<spark\-mention(.*)\"\>)/i;
+const reg3 = /(\<spark\-mention\sdata\-object\-type\=\"person\"\sdata\-object\-id=\"([a-zA-Z0-9]*)\"\>)/i;
 const reg4 = /(\<\/spark-mention\>)/i;
 const reg5 = /Inquire/i;
 const regArray = [ /(answer|\/a\/?)(?:\s+)?(\d+)\s+(?:\-\s+)?(\w+.*)$/i ]
@@ -25,6 +25,9 @@ module.exports = function ( controller ) {
         if ( match ) {
             if ( message.original_message.html ) {
                 filterHtml = message.original_message.html.replace( reg5, '' ).replace( reg4, '' ).replace( reg3, '' ).replace( reg1, '' ).replace( reg2, '' );
+                // console.log( 'HTML Filtering: ' )
+                // console.log( filterHtml )
+                // console.log( message.original_message.html )
                 message.original_message.html = filterHtml;
             }
             qnaController.handleAnswer( message ).then( response => {

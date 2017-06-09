@@ -140,8 +140,6 @@ var createRoom = ( message ) => {
 // Add the answer object to the question object
 var addAnswer = ( message ) => {
     let match = answerRegex.exec( message.original_message.text );
-    // console.log( 'Answer debug..' )
-    // console.log( match )
     let sequence = Number( match[ 2 ] );
     let htmlMatch;
     let htmlMessage;
