@@ -4,8 +4,8 @@ const qnaController = require( '../qnaController' );
 // remove html formatting for Spark Messages
 const reg1 = /(\<p\>)/i;
 const reg2 = /(\<\/p\>)/i;
-const reg3 = /(\<spark\-mention\sdata\-object\-type\=\"person\"\sdata\-object\-id=\"([a-zA-Z0-9]*)\"\>)/i;
-const reg4 = /(\<\/spark-mention\>)/i;
+const reg3 = /(\<spark\-mention\sdata\-object\-type\=\"person\"\sdata\-object\-id=\"([a-zA-Z0-9]*)\"\>)/gi;
+const reg4 = /(\<\/spark-mention\>)/gi;
 const reg5 = /Inquire/i;
 const regArray = [ /(answer|\/a\/?)(?:\s+)?(\d+)\s+(?:\-\s+)?(\w+.*)$/i ]
 
@@ -39,17 +39,17 @@ module.exports = function ( controller ) {
                 answerMessage += `Your question has been responded to by: <@personEmail:${response.answers[response.answers.length-1].personEmail}>. <br>`;
                 if ( response.html ) {
                     question = response.html
-                    answerMessage += `Original Question: ${question}<br>`;
+                    answerMessage += `<strong>Q -</strong> ${question}<br>`;
                 } else {
                     question = response.text
-                    answerMessage += `Original Question: __${question}__ <br>`;
+                    answerMessage += `<strong>Q -</strong> __${question}__ <br>`;
                 }
                 if ( response.answers[ response.answers.length - 1 ].html ) {
                     answer = response.answers[ response.answers.length - 1 ].html;
-                    answerMessage += `Answer: ${answer}`;
+                    answerMessage += `<strong>A -</strong> ${answer}`;
                 } else {
                     answer = response.answers[ response.answers.length - 1 ].text
-                    answerMessage += `Answer: **${answer}**. `;
+                    answerMessage += `<strong>A -</strong> **${answer}**. `;
                 }
                 bot.startPrivateConversationWithPersonId( questioner, ( error, convo ) => {
                     if ( error )
@@ -95,7 +95,7 @@ module.exports = function ( controller ) {
                     }
                 } );
             } else {
-                mdMessage = 'There are no unanswered questions in this Spark Space.';
+                mdMessage = 'There are no unanswered questions in this Space.';
             }
             bot.reply( message, {
                 markdown: mdMessage
@@ -118,9 +118,9 @@ module.exports = function ( controller ) {
             if ( message.original_message.html ) {
                 filterHtml = message.original_message.html.replace( reg5, '' ).replace( reg4, '' ).replace( reg3, '' ).replace( reg1, '' ).replace( reg2, '' );
                 message.original_message.html = filterHtml;
-                personalMessage = `Your question: ` + `${ message.original_message.html }`;
+                personalMessage = `<strong>Q - </strong>` + `${ message.original_message.html }`;
             } else {
-                personalMessage = `Your question: ` + `__${ message.text }__`;
+                personalMessage = `<strong>Q - </strong>` + `__${ message.text }__`;
             }
             // console.log( 'Debugging' )
             // console.log( message )
@@ -128,7 +128,7 @@ module.exports = function ( controller ) {
                     if ( room ) {
                         personalMessage += ' has been logged. '
                         mdMessage += ' ? was logged as #: ' + `**${room.sequence}**`;
-                        mdMessage += `<br>To answer this question please reply ${mdLink} or with: <code>@Inquire /a ${room.sequence} [your response].</code> `;
+                        mdMessage += `<br>Answer ${mdLink} or with: <code>@Inquire /a ${room.sequence} [your response].</code> `;
                         bot.reply( message, {
                             markdown: mdMessage
                         } );
