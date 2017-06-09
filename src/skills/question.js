@@ -6,6 +6,7 @@ const reg1 = /(\<p\>)/i;
 const reg2 = /(\<\/p\>)/i;
 const reg3 = /(\<spark\-mention(.*)\"\>)/i;
 const reg4 = /(\<\/spark-mention\>)/i;
+const reg5 = /Inquire/i;
 const regArray = [ /(answer|\/a\/?)(?:\s+)?(\d+)\s+(?:\-\s+)?(\w+.*)$/i ]
 
 module.exports = function ( controller ) {
@@ -23,7 +24,7 @@ module.exports = function ( controller ) {
         var filterHtml;
         if ( match ) {
             if ( message.original_message.html ) {
-                filterHtml = message.original_message.html.replace( reg4, '' ).replace( reg3, '' ).replace( reg1, '' ).replace( reg2, '' );
+                filterHtml = message.original_message.html.replace( reg5, '' ).replace( reg4, '' ).replace( reg3, '' ).replace( reg1, '' ).replace( reg2, '' );
                 message.original_message.html = filterHtml;
             }
             qnaController.handleAnswer( message ).then( response => {
@@ -112,7 +113,7 @@ module.exports = function ( controller ) {
         let questioner = message.original_message.personId;
         if ( !match ) {
             if ( message.original_message.html ) {
-                filterHtml = message.original_message.html.replace( reg4, '' ).replace( reg3, '' ).replace( reg1, '' ).replace( reg2, '' );
+                filterHtml = message.original_message.html.replace( reg5, '' ).replace( reg4, '' ).replace( reg3, '' ).replace( reg1, '' ).replace( reg2, '' );
                 message.original_message.html = filterHtml;
                 personalMessage = `Your question: ` + `${ message.original_message.html }`;
             } else {
