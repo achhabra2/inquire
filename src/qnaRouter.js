@@ -119,9 +119,9 @@ var formatSort = ( expression ) => {
     let sort;
     let match = sortregex.exec( expression );
     if ( match && match[ 3 ] == 'dsc' ) {
-        sort = match[ 1 ];
-    } else if ( match && match[ 3 ] == 'asc' ) {
         sort = '-' + match[ 1 ];
+    } else if ( match && match[ 3 ] == 'asc' ) {
+        sort = match[ 1 ];
     } else {
         sort = '-createdOn';
     }

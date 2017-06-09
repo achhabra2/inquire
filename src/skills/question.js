@@ -4,7 +4,7 @@ const qnaController = require( '../qnaController' );
 // remove html formatting for Spark Messages
 const reg1 = /(\<p\>)/i;
 const reg2 = /(\<\/p\>)/i;
-const reg3 = /(\<spark\-mention(.*)\>)/i;
+const reg3 = /(\<spark\-mention(.*)\"\>)/i;
 const reg4 = /(\<\/spark-mention\>)/i;
 const regArray = [ /(answer|\/a\/?)(?:\s+)?(\d+)\s+(?:\-\s+)?(\w+.*)$/i ]
 
@@ -99,8 +99,6 @@ module.exports = function ( controller ) {
         } )
     } );
     controller.hears( /^(.*)/i, 'direct_mention', function ( bot, message ) {
-        // console.log( 'Debugging' )
-        // console.log( message )
         for ( let reg of regArray ) {
             match = reg.exec( message.original_message.text )
             if ( match )
@@ -120,6 +118,8 @@ module.exports = function ( controller ) {
             } else {
                 personalMessage = `Your question: ` + `__${ message.text }__`;
             }
+            // console.log( 'Debugging' )
+            // console.log( message )
             qnaController.handleQuestion( message ).then( room => {
                     if ( room ) {
                         personalMessage += ' has been logged. '
