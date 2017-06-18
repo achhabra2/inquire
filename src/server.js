@@ -200,7 +200,7 @@ controller.createWebhookEndpoints( app, bot, function () {
 
 app.get( '/auth/login',
     passport.authenticate( 'oauth2', {
-        scope: [ 'spark:messages_write', 'spark:rooms_read', 'spark:people_read' ]
+        scope: [ 'spark:messages_write', 'spark:rooms_read', 'spark:people_read', 'spark:teams_read' ]
     } ),
     function ( req, res ) {
         // The request will be redirected to Cisco Spark for authentication, so this
@@ -209,7 +209,7 @@ app.get( '/auth/login',
 
 app.get( '/auth/redirect',
     passport.authenticate( 'oauth2', {
-        scope: [ 'spark:messages_write', 'spark:rooms_read', 'spark:people_read' ],
+        scope: [ 'spark:messages_write', 'spark:rooms_read', 'spark:people_read', 'spark:teams_read' ],
         failureRedirect: '/error'
     } ),
     function ( req, res ) {
