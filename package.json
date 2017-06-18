@@ -19,6 +19,7 @@
     "morgan": "^1.8.2",
     "node-env-file": "^0.1.8",
     "node-uuid": "^1.4.8",
+    "parse-link-header": "^1.0.1",
     "passport": "^0.3.2",
     "passport-cisco-spark": "^1.0.3",
     "passport-oauth2": "^1.4.0",

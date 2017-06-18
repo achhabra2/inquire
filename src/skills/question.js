@@ -165,4 +165,16 @@ module.exports = function ( controller ) {
         console.log( 'Person Left' )
         qnaController.handleMembershipChange( data )
     } );
+    controller.hears( /^dbstats/i, 'direct_message', function ( bot, message ) {
+        qnaController.getDbStats().then( stats => {
+                bot.reply( message, {
+                    markdown: 'DBStats: ' + `<br> Questions: ${stats.questions} <br> Spaces: ${stats.spaces}`
+                } );
+            } )
+            .catch( err => {
+                bot.reply( message, {
+                    markdown: 'Error getting DB Stats'
+                } );
+            } )
+    } )
 }

@@ -9,6 +9,9 @@ const Spark = require( 'ciscospark' ).init( {
         }
     }
 } );
+const rp = require( 'request-promise-native' );
+const parseLink = require( 'parse-link-header' );
+
 
 const answerRegex = /(answer|\/a\/?)(?:\s+)?(\d+)\s+(?:\-\s+)?(\w+.*)$/i;
 
@@ -27,14 +30,39 @@ var updateRoomActivity = ( roomId ) => {
         } )
 }
 
+function getMembershipsPaginated( url = 'https://api.ciscospark.com/v1/memberships', roomId, members = [] ) {
+    let qs
+    let options = {
+        'auth': {
+            'bearer': process.env.access_token
+        },
+        resolveWithFullResponse: true
+    }
+    if ( roomId ) {
+        options.qs = {
+            'roomId': roomId,
+            'max': 999
+        }
+    }
+    return rp.get( url, options ).then( response => {
+        let links;
+        let responseArray = members.concat( JSON.parse( response.body ).items )
+        if ( response.headers.link ) {
+            links = parseLink( response.headers.link )
+            if ( links.next.url ) {
+                return getMembershipsPaginated( links.next.url, null, responseArray )
+            }
+        } else
+            return responseArray
+    } )
+}
+
+
 var updateRoomMemberships = ( roomId ) => {
     return Room.findById( roomId ).exec().then( room => {
-            return Spark.memberships.list( {
-                    roomId: roomId,
-                    max: 999
-                } ).then( response => {
+            return getMembershipsPaginated( undefined, roomId ).then( response => {
                     var memberArray = []
-                    response.items.forEach( member => {
+                    response.forEach( member => {
                         memberArray.push( member.personId )
                     } )
                     room.memberships = memberArray
@@ -96,6 +124,22 @@ var getRoomDetails = ( message ) => {
             return message;
         } );
 };
+
+var getDbStats = () => {
+    let stats = {}
+    return Room.count( {} ).exec().then( count => {
+            stats.spaces = count
+            return Question.count( {} ).exec()
+        } )
+        .then( count => {
+            stats.questions = count
+            return stats
+        } )
+        .catch( err => {
+            console.error( 'Error getting Db Stats' )
+            console.error( err )
+        } )
+}
 
 // Upsert creation of room / question
 var addQuestion = ( message, room ) => {
@@ -316,5 +360,6 @@ module.exports = {
     authenticatedRooms: authenticatedRooms,
     checkRights: checkRights,
     removeQuestion: removeQuestion,
-    handleMembershipChange: handleMembershipChange
+    handleMembershipChange: handleMembershipChange,
+    getDbStats: getDbStats
 };
