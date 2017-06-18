@@ -327,7 +327,7 @@ var removeQuestion = ( id ) => {
 // }
 
 var authenticatedRooms = ( personId ) => {
-    return Room.find( {} ).select( '_id displayName lastActivity teamName sequence' )
+    return Room.find( {} ).select( '_id displayName lastActivity teamId teamName sequence' )
         .where( 'memberships' )
         .in( [ personId ] )
         .sort( '-lastActivity' ).exec()
