@@ -16,7 +16,7 @@ const Motd = require( './motdModel' );
 const answerRegex = /(answer|\/a\/?)(?:\s+)?(\d+)\s+(?:\-\s+)?(\w+.*)$/i;
 
 var getMotd = () => {
-    return Motd.find( {} ).exec()
+    return Motd.find( {} ).sort( '-createdOn' ).exec()
 }
 
 var updateRoomActivity = ( roomId ) => {
