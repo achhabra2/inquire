@@ -16,6 +16,16 @@ let authUrl = base + '/login';
 let errorUrl = base + '/error';
 let apiUrl = base + '/api/spaces/';
 
+router.get( '/motd', ( req, res ) => {
+    console.log( 'Received api query for motds' );
+    qnaController.getMotd()
+        .then( motds => {
+            res.json( motds );
+        } ).catch( err => {
+            res.status( 500 ).end();
+        } );
+} );
+
 router.get( '/spaces/:room', ensureAuthenticated, ensureAccessRights, ( req, res ) => {
     let room = req.params.room;
     console.log( 'Received room api query for' + room );

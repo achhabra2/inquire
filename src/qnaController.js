@@ -11,9 +11,13 @@ const Spark = require( 'ciscospark' ).init( {
 } );
 const rp = require( 'request-promise-native' );
 const parseLink = require( 'parse-link-header' );
-
+const Motd = require( './motdModel' );
 
 const answerRegex = /(answer|\/a\/?)(?:\s+)?(\d+)\s+(?:\-\s+)?(\w+.*)$/i;
+
+var getMotd = () => {
+    return Motd.find( {} ).exec()
+}
 
 var updateRoomActivity = ( roomId ) => {
     return Room.findById( roomId ).exec().then( room => {
@@ -361,5 +365,6 @@ module.exports = {
     checkRights: checkRights,
     removeQuestion: removeQuestion,
     handleMembershipChange: handleMembershipChange,
-    getDbStats: getDbStats
+    getDbStats: getDbStats,
+    getMotd: getMotd
 };
