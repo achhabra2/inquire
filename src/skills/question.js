@@ -59,8 +59,7 @@ module.exports = function ( controller ) {
                         markdown: answerMessage
                     } );
                 } );
-                var mdMessage = `<@personEmail:${message.user}>, `;
-                mdMessage += `your answer has been logged. Click ${mdLink} to view all FAQ.`;
+                var mdMessage = `Answer logged. Click ${mdLink} to view all FAQ.`;
                 console.log( 'Received Answer' );
                 bot.reply( message, {
                     markdown: mdMessage
@@ -84,6 +83,7 @@ module.exports = function ( controller ) {
     controller.hears( [ /^\s*?open/i, /\/open/i, /open$/i ], 'direct_mention', function ( bot, message ) {
         qnaController.listQuestions( message.channel, 'unanswered' ).then( response => {
             let mdMessage;
+            let questioner = message.original_message.personId;
             let link = process.env.public_address + '/public/#/space/' + message.channel;
             let mdLink = `[here](${link})`;
             if ( response.docs.length > 0 ) {
@@ -97,8 +97,13 @@ module.exports = function ( controller ) {
             } else {
                 mdMessage = 'There are no unanswered questions in this Space.';
             }
-            bot.reply( message, {
-                markdown: mdMessage
+            bot.startPrivateConversationWithPersonId( questioner, ( error, convo ) => {
+                if ( error )
+                    console.error( error );
+                convo.say( {
+                    text: mdMessage,
+                    markdown: mdMessage
+                } );
             } );
         } )
     } );
@@ -111,7 +116,7 @@ module.exports = function ( controller ) {
         let link = process.env.public_address + '/public/#/space/' + message.channel;
         let mdLink = `[here](${link})`;
         var personalMessage;
-        var mdMessage = `Ok <@personEmail:${message.user}> `
+        var mdMessage;
         var filterHtml;
         let questioner = message.original_message.personId;
         if ( !match ) {
@@ -127,8 +132,7 @@ module.exports = function ( controller ) {
             qnaController.handleQuestion( message ).then( room => {
                     if ( room ) {
                         personalMessage += ' has been logged. '
-                        mdMessage += ' ? was logged as #: ' + `**${room.sequence}**`;
-                        mdMessage += `<br>Answer ${mdLink} or with: <code>@Inquire /a ${room.sequence} [your response].</code> `;
+                        mdMessage = `Answer <@personEmail:${message.user}>'s ? ${mdLink} or with: <code>@Inquire /a ${room.sequence} [your response].</code> `;
                         bot.reply( message, {
                             markdown: mdMessage
                         } );

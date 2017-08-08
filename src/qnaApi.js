@@ -2,6 +2,7 @@
 
 const Room = require( './qnaModel' ).Room;
 const Question = require( './qnaModel' ).Question;
+const User = require( './userModel' )
 const Spark = require( 'ciscospark' ).init( {
     credentials: {
         authorization: {
@@ -9,6 +10,13 @@ const Spark = require( 'ciscospark' ).init( {
         }
     }
 } );
+
+var router = express.Router();
+
+router.use( bodyParser.json() );
+router.use( bodyParser.urlencoded( {
+    extended: true
+} ) );
 
 var addRoom = ( req, res ) => {
     if ( req.data.id && req.data.orgId && req.data.orgId ) {
@@ -79,3 +87,22 @@ var removeQuestion = ( req, res ) => {
         res.status( 400 ).end()
     }
 }
+
+
+router.route( 'spaces' )
+    .post( addRoom )
+    .put()
+router.route( 'spaces/:space' )
+    .delete( removeQuestion )
+router.route( 'questions' )
+    .post( addQuestion )
+    .put()
+router.route( 'questions/:question' )
+    .delete( removeRoom )
+router.route( 'users' )
+    .post()
+    .put()
+router.route( 'users/:user' )
+    .delete()
+
+module.exports = router
