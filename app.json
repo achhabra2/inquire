@@ -2,7 +2,7 @@
   "name": "Inquire App",
   "description": "Question and Answer Sparkbot",
   "repository": "https://github.com/achhabra2/inquire",
-  "logo": "https://node-js-sample.herokuapp.com/node.png",
+  "logo": "http://9ccd3fa76afd5c0d8850-e02d51191d1ac7a8190e601c0d9ebc7d.r49.cf1.rackcdn.com/ZDg4YmQ3NWUtYjhjMy00OGNmLWFiYzctNWVjNWNiYzc1OGFjL2ZpbGVzL2xvZ28vYjJlYmE5N2EtZWFjYS00MzJiLWE2ZWMtMzliYTRlZWEyNzFl",
   "keywords": ["q&a", "question", "answer", "cisco", "spark", "bot"],
   "env": {
     "public_address": {
