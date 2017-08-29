@@ -38,10 +38,16 @@ process.env.CISCOSPARK_ACCESS_TOKEN = process.env.access_token;
 const mongoose = require( 'mongoose' );
 // Connection Strings to MongoDB Instance
 mongoose.Promise = global.Promise;
+
+// Heroku Addon Case - use mongo connection string
+if(process.env.MONGODB_URI)
+    process.env.mongo = process.env.MONGODB_URI
+
 mongoose.connect( process.env.mongo ).then( ( err ) => {
     if ( err )
         console.error( err );
 } );
+
 
 // Create the Botkit controller, which controls all instances of the bot.
 var controller = Botkit.sparkbot( {
@@ -253,4 +259,4 @@ if ( process.env.NODE_ENV != 'production' ) {
     app.use( '/inquire/public', express.static( path.join( __dirname, '../views' ) ) );
 }
 
-app.listen( 3000 );
+app.listen( process.env.PORT || 3000 );
