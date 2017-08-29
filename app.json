@@ -6,13 +6,14 @@
   "keywords": ["q&a", "question", "answer", "cisco", "spark", "bot"],
   "env": {
     "public_address": {
-      "description": "Publicly accessible FDQN of the application. If Heroku use the full URL (eg. https://app.herokuapp.com"
+      "description": "Publicly accessible FDQN of the application. If Heroku use the full URL (eg. https://{APPNAME}.herokuapp.com"
     },
     "access_token": {
       "description": "Cisco Spark Bot Access Token"
     },
     "mongo": {
-      "description": "Mongo DB Connection String"
+      "description": "Mongo DB Connection String",
+      "required": false
     },
     "oauth_client": {
       "description": "Oauth Client ID from Cisco Spark"
