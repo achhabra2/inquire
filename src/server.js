@@ -21,6 +21,10 @@ if ( process.env.NODE_ENV != 'production' ) {
     env( './.env' );
 }
 
+// Default case for no bot name specification
+if(!process.env.bot_name)
+    process.env.bot_name = 'Inquire';
+
 const bodyParser = require( 'body-parser' );
 const Botkit = require( 'botkit' );
 const qnaRouter = require( './qnaRouter' );

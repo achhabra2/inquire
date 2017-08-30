@@ -38,6 +38,7 @@ Set the following environment variables:
 
 | EV Name | Description |
 | --- | --- |
+bot_name | The name of your Cisco Spark Bot
 public_address | The public DNS that you app will be accessible at. 
 access_token | Cisco Spark Bot Access Token From **(1)**
 mongo | MongoDB Connection String

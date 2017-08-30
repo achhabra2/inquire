@@ -5,6 +5,9 @@
   "logo": "http://9ccd3fa76afd5c0d8850-e02d51191d1ac7a8190e601c0d9ebc7d.r49.cf1.rackcdn.com/ZDg4YmQ3NWUtYjhjMy00OGNmLWFiYzctNWVjNWNiYzc1OGFjL2ZpbGVzL2xvZ28vYjJlYmE5N2EtZWFjYS00MzJiLWE2ZWMtMzliYTRlZWEyNzFl",
   "keywords": ["q&a", "question", "answer", "cisco", "spark", "bot"],
   "env": {
+    "bot_name": {
+      "description": "Name of your Cisco Spark Bot"
+    },
     "public_address": {
       "description": "Publicly accessible FDQN of the application. If Heroku use the full URL (eg. https://{APPNAME}.herokuapp.com"
     },

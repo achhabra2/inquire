@@ -6,7 +6,7 @@ const reg1 = /(\<p\>)/i;
 const reg2 = /(\<\/p\>)/i;
 const reg3 = /(\<spark\-mention\sdata\-object\-type\=\"person\"\sdata\-object\-id=\"([a-zA-Z0-9]*)\"\>)/gi;
 const reg4 = /(\<\/spark-mention\>)/gi;
-const reg5 = /Inquire/i;
+const reg5 = new RegExp(process.env.bot_name,'i');
 const regArray = [ /(answer|\/a\/?)(?:\s+)?(\d+)\s+(?:\-\s+)?(\w+.*)$/i ]
 
 module.exports = function ( controller ) {
@@ -132,7 +132,7 @@ module.exports = function ( controller ) {
             qnaController.handleQuestion( message ).then( room => {
                     if ( room ) {
                         personalMessage += ' has been logged. '
-                        mdMessage = `Answer <@personEmail:${message.user}>'s ? ${mdLink} or with: <code>@Inquire /a ${room.sequence} [your response].</code> `;
+                        mdMessage = `Answer <@personEmail:${message.user}>'s ? ${mdLink} or with: <code>@${process.env.bot_name} /a ${room.sequence} [your response].</code> `;
                         bot.reply( message, {
                             markdown: mdMessage
                         } );
