@@ -1,5 +1,9 @@
-const env = require( 'node-env-file' );
-env( './.env' );
+const fs = require('fs');
+if (fs.existsSync('./.env')) {
+  console.log('Found env file');
+  const env = require( 'node-env-file' );
+  env( './.env' );
+}
 
 const chai = require('chai');
 chai.should();
