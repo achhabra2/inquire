@@ -1,4 +1,18 @@
 'use strict';
+// console timestamps
+require( 'console-stamp' )( console, 'yyyy.mm.dd HH:MM:ss.l' );
+const debug = require('debug')('Inquire-Server');
+debug( 'Initializing App In: ' + process.env.NODE_ENV + ' mode.' );
+
+// Check for production
+// If development environment load .env file
+if ( process.env.NODE_ENV != 'production' ) {
+    console.log( 'Loading env file...' );
+    const env = require( 'node-env-file' );
+    env( './.env' );
+}
+
+process.env.CISCOSPARK_ACCESS_TOKEN = process.env.access_token;
 
 const session = require( 'express-session' );
 const passport = require( 'passport' );
@@ -9,17 +23,6 @@ const userModel = require( './userModel' );
 const OAuth2Strategy = require( 'passport-oauth2' );
 const MongoStore = require( 'connect-mongo' )( session );
 const sparkUser = require( './userModel' );
-// console timestamps
-require( 'console-stamp' )( console, 'yyyy.mm.dd HH:MM:ss.l' );
-console.log( 'Initializing App In: ' + process.env.NODE_ENV + ' mode.' );
-
-// Check for production
-// If development environment load .env file
-if ( process.env.NODE_ENV != 'production' ) {
-    console.log( 'Loading env file...' );
-    const env = require( 'node-env-file' );
-    env( './.env' );
-}
 
 // Default case for no bot name specification
 if(!process.env.bot_name)
@@ -34,10 +37,8 @@ const express = require( 'express' );
 const uiUrl = process.env.public_address + '/public/#/';
 const redirectUrl = process.env.public_address + '/auth/redirect';
 
-console.log( 'Oauth RedirectUrl:' );
-console.log( redirectUrl );
-
-process.env.CISCOSPARK_ACCESS_TOKEN = process.env.access_token;
+debug( 'Oauth RedirectUrl:' );
+debug( redirectUrl );
 
 const mongoose = require( 'mongoose' );
 // Connection Strings to MongoDB Instance
@@ -48,6 +49,7 @@ if(process.env.MONGODB_URI)
     process.env.mongo = process.env.MONGODB_URI
 
 mongoose.connect( process.env.mongo ).then( ( err ) => {
+    debug('Connected to MongoDB');
     if ( err )
         console.error( err );
 } );
@@ -55,13 +57,13 @@ mongoose.connect( process.env.mongo ).then( ( err ) => {
 
 // Create the Botkit controller, which controls all instances of the bot.
 var controller = Botkit.sparkbot( {
-    // debug: true,
+    debug: false,
+    log: true,
     public_address: process.env.public_address,
     ciscospark_access_token: process.env.access_token,
     studio_token: process.env.studio_token, // get one from studio.botkit.ai to enable content management, stats, message console and more
     secret: process.env.secret, // this is an RECOMMENDED but optional setting that enables validation of incoming webhooks
-    webhook_name: 'Cisco Spark bot created with Botkit, override me before going to production',
-    studio_command_uri: process.env.studio_command_uri,
+    webhook_name: `${process.env.bot_name} Webhook via Botkit`
 } );
 
 var normalizedPath = require( "path" ).join( __dirname, "skills" );
@@ -71,8 +73,6 @@ require( "fs" ).readdirSync( normalizedPath ).forEach( function ( file ) {
 
 var bot = controller.spawn( {} );
 
-// controller.setupWebserver( 3000, function ( err, webserver ) {
-// } );
 
 passport.serializeUser( function ( user, done ) {
     // console.log( 'serializing' );
@@ -100,15 +100,15 @@ const sparkOauth = new OAuth2Strategy( {
         callbackURL: redirectUrl
     },
     function ( accessToken, refreshToken, profile, done ) {
-        console.log( 'Access token: ' + accessToken )
-        console.log( 'Refresh token: ' + refreshToken )
+        debug( 'Access token: ' + accessToken )
+        debug( 'Refresh token: ' + refreshToken )
         if ( profile.id ) {
             sparkUser.findById( profile.id ).then( returnedUser => {
                     if ( returnedUser ) {
-                        console.log( 'User Found.. no need to create.' );
+                        debug( 'User Found.. no need to create.' );
                         done( null, profile );
                     } else {
-                        console.log( 'No Profile ID Creating new User' );
+                        debug( 'No Profile ID Creating new User' );
                         let user = new sparkUser( {
                             _id: profile.id,
                             displayName: profile.displayName,
@@ -131,8 +131,8 @@ const sparkOauth = new OAuth2Strategy( {
                 } );
 
         } else {
-            console.log( 'No profile id?: ' );
-            console.log( profile );
+            debug( 'No profile id?: ' );
+            debug( profile );
             done( null, profile );
         }
     } );
@@ -200,14 +200,6 @@ app.get( '/login', ( req, res ) => {
     res.redirect( uiUrl + 'login' )
 } );
 
-app.post( '/ciscospark/incoming', ( req, res ) => {
-    controller.handleWebhookPayload( req, res, bot )
-} );
-
-controller.createWebhookEndpoints( app, bot, function () {
-    console.log( "Cisco Spark: Webhooks set up!" );
-} );
-
 app.get( '/auth/login',
     passport.authenticate( 'oauth2', {
         scope: [ 'spark:messages_write', 'spark:rooms_read', 'spark:people_read', 'spark:teams_read' ]
@@ -263,4 +255,15 @@ if ( process.env.NODE_ENV != 'production' ) {
     app.use( '/inquire/public', express.static( path.join( __dirname, '../views' ) ) );
 }
 
+app.post( '/ciscospark/receive', ( req, res ) => {
+    res.sendStatus(200);
+    controller.handleWebhookPayload( req, res, bot )
+} );
+
 app.listen( process.env.PORT || 3000 );
+
+controller.createWebhookEndpoints( app, bot, function () {
+    debug( "Cisco Spark: Webhooks set up!" );
+} );
+
+module.exports = app;

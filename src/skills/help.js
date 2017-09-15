@@ -26,7 +26,7 @@ module.exports = function ( controller ) {
         mdMessage += '3. ``list`` - Type the list command to receive a web link to view a dynamically created FAQ page with all the questions and answers. <br>';
         mdMessage += '4. ``open`` - List open ended / unanswered questions in the current Spark Space. <br>';
         mdMessage += 'Do not forget to tag me before each command! Happy FAQing. ';
-        bot.startPrivateConversationWithPersonId( message.original_message.personId, ( error, convo ) => {
+        bot.startPrivateConversation( message, ( error, convo ) => {
             if ( error )
                 console.error( error );
             convo.say( {

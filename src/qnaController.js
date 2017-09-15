@@ -2,18 +2,27 @@
 
 const Room = require( './qnaModel' ).Room;
 const Question = require( './qnaModel' ).Question;
-const Spark = require( 'ciscospark' ).init( {
-    credentials: {
-        authorization: {
-            access_token: process.env.access_token
-        }
-    }
-} );
+const Spark = require( 'ciscospark/env');
 const rp = require( 'request-promise-native' );
 const parseLink = require( 'parse-link-header' );
 const Motd = require( './motdModel' );
+const request = require('superagent');
 
 const answerRegex = /(answer|\/a\/?)(?:\s+)?(\d+)\s+(?:\-\s+)?(\w+.*)$/i;
+
+var formatText = (message) => {
+    let reg = new RegExp(process.env.bot_name, 'i');
+    message.text = message.text.replace(reg,'');
+    return message;
+}
+
+var getPerson = (personId) => {
+    return request.get(`https://api.ciscospark.com/v1/people/${personId}`)
+    .set('Authorization', `Bearer ${process.env.access_token}`)
+    .then(res => {
+      return res.body;
+    });
+}
 
 var getMotd = () => {
     return Motd.find( {} ).sort( '-createdOn' ).exec()
@@ -89,7 +98,7 @@ var updateRoomMemberships = ( roomId ) => {
 var handleMembershipChange = ( data ) => {
     return checkRoom( data ).then( ( room ) => {
             if ( room )
-                return updateRoomMemberships( data.original_message.data.roomId )
+                return updateRoomMemberships( data.channel )
             else {
                 console.log( 'Existing room not found' )
                 return null
@@ -101,7 +110,7 @@ var handleMembershipChange = ( data ) => {
 }
 
 var getUserDetails = ( message ) => {
-    return Spark.people.get( message.original_message.personId )
+    return getPerson( message.original_message.personId )
         .then( person => {
             let msg = message;
             msg.personDisplayName = person.displayName;
@@ -147,6 +156,7 @@ var getDbStats = () => {
 
 // Upsert creation of room / question
 var addQuestion = ( message, room ) => {
+    message = formatText(message);
     room.sequence += 1;
     room.lastActivity = Date.now();
     let question = new Question( {
@@ -158,8 +168,8 @@ var addQuestion = ( message, room ) => {
         sequence: room.sequence,
         createdOn: Date.now()
     } );
-    if ( message.original_message.html ) {
-        question.html = message.original_message.html
+    if ( message.html ) {
+        question.html = message.html
     }
     return room.save().then( room => {
         console.log( 'Updated room successfully.' );
@@ -191,8 +201,8 @@ var addAnswer = ( message ) => {
     let sequence = Number( match[ 2 ] );
     let htmlMatch;
     let htmlMessage;
-    if ( message.original_message.html ) {
-        htmlMatch = answerRegex.exec( message.original_message.html )
+    if ( message.html ) {
+        htmlMatch = answerRegex.exec( message.html )
         htmlMessage = htmlMatch[ 3 ];
     }
     let answer = {
@@ -355,6 +365,7 @@ var checkRights = ( personId, roomId ) => {
 }
 
 module.exports = {
+    formatText: formatText,
     handleAnswer: handleAnswer,
     handleQuestion: handleQuestion,
     listQuestions: listQuestions,
