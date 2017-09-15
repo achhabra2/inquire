@@ -3,11 +3,11 @@
 require( 'console-stamp' )( console, 'yyyy.mm.dd HH:MM:ss.l' );
 const debug = require('debug')('Inquire-Server');
 debug( 'Initializing App In: ' + process.env.NODE_ENV + ' mode.' );
-
+const fs = require('fs');
 // Check for production
 // If development environment load .env file
-if ( process.env.NODE_ENV != 'production' ) {
-    console.log( 'Loading env file...' );
+if (fs.existsSync('./.env')) {
+    console.log('Found env file');
     const env = require( 'node-env-file' );
     env( './.env' );
 }

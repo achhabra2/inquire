@@ -8,3 +8,4 @@ services:
 notifications:
   email:
     - aman.chhabra1@gmail.com
+after_success: npm run coverage
