@@ -2,14 +2,8 @@
 
 const Room = require( './qnaModel' ).Room;
 const Question = require( './qnaModel' ).Question;
-const User = require( './userModel' )
-const Spark = require( 'ciscospark' ).init( {
-    credentials: {
-        authorization: {
-            access_token: process.env.access_token
-        }
-    }
-} );
+const User = require( './userModel' );
+const Spark = require( 'ciscospark/env' );
 
 var router = express.Router();
 

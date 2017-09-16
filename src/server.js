@@ -48,11 +48,12 @@ mongoose.Promise = global.Promise;
 if(process.env.MONGODB_URI)
     process.env.mongo = process.env.MONGODB_URI
 
-mongoose.connect( process.env.mongo ).then( ( err ) => {
+mongoose.connect( process.env.mongo,
+    {useMongoClient: true}).then( ( db ) => {
     debug('Connected to MongoDB');
-    if ( err )
-        console.error( err );
-} );
+} ).catch(err => {
+    console.error(err);
+})
 
 
 // Create the Botkit controller, which controls all instances of the bot.

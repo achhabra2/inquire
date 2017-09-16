@@ -1,6 +1,7 @@
 ## Inquire Cisco Spark Bot
 #### Written by Aman Chhabra
 [![Build Status](https://travis-ci.org/achhabra2/inquire.svg?branch=master)](https://travis-ci.org/achhabra2/inquire)
+[![Coverage Status](https://coveralls.io/repos/github/achhabra2/inquire/badge.svg?branch=master)](https://coveralls.io/github/achhabra2/inquire?branch=master)
 [![GitHub stars](https://img.shields.io/github/stars/achhabra2/inquire.svg)](https://github.com/achhabra2/inquire/stargazers)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/achhabra2/inquire/master/LICENSE)
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/achhabra2/inquire)

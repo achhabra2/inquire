@@ -1,10 +1,10 @@
 const chai = require('chai');
-const app = require('../src/server');
 const sinon = require('sinon');
 
 chai.should();
 
 const request = require('supertest');
+var app = require('../src/server');
 
 const helloJSON = {
   "id": "Y2lzY29zcGFyazovL3VzL1dFQkhPT0svMjYzODJlZTktZjhhMC00MDlmLTg2NjUtNTk3MjAxZjBhYWU3",
@@ -96,17 +96,5 @@ describe('Bot Server', function () {
       .set('accept', 'json')
       .send(webhookJSON)
       .expect(200)
-  });
-  it('Should respond to HELLO command', function(done) {
-    done();
-  });
-  it('Should respond to HELP command. ', function(done) {
-    done();
-  });
-  it('Should respond to OPEN command', function(done) {
-    done();
-  });
-  it('Should respond to LIST command', function(done) {
-    done();
   });
 });
