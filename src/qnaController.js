@@ -1,5 +1,5 @@
 'use strict';
-
+const debug = require('debug')('Controller');
 const Room = require( './qnaModel' ).Room;
 const Question = require( './qnaModel' ).Question;
 const Spark = require( 'ciscospark/env');
@@ -34,7 +34,7 @@ var updateRoomActivity = ( roomId ) => {
             return room.save()
         } )
         .then( savedRoom => {
-            console.log( 'Updated Activity: ' + savedRoom.displayName )
+            debug( 'Updated Activity: ' + savedRoom.displayName )
             return savedRoom
         } )
         .catch( err => {
@@ -87,11 +87,11 @@ var updateRoomMemberships = ( roomId ) => {
                 } )
         } )
         .then( savedRoom => {
-            console.log( 'Updated Room Memberships: ' + savedRoom.displayName )
+            debug( 'Updated Room Memberships: ' + savedRoom.displayName )
             return savedRoom
         } )
         .catch( err => {
-            console.log( 'Error saving Room Memberships ' )
+            debug( 'Error saving Room Memberships ' )
         } )
 }
 
@@ -100,7 +100,7 @@ var handleMembershipChange = ( data ) => {
             if ( room )
                 return updateRoomMemberships( data.channel )
             else {
-                console.log( 'Existing room not found' )
+                debug( 'Existing room not found' )
                 return null
             }
         } )
@@ -172,7 +172,7 @@ var addQuestion = ( message, room ) => {
         question.html = message.html
     }
     return room.save().then( room => {
-        console.log( 'Updated room successfully.' );
+        debug( 'Updated room successfully.' );
         return question.save()
     } );
 };

@@ -3,16 +3,17 @@
 require( 'console-stamp' )( console, 'yyyy.mm.dd HH:MM:ss.l' );
 const debug = require('debug')('Inquire-Server');
 debug( 'Initializing App In: ' + process.env.NODE_ENV + ' mode.' );
-const fs = require('fs');
+// TESTING the use of dotenv instead of node-env-file
 // Check for production
 // If development environment load .env file
-if (fs.existsSync('./.env')) {
-    console.log('Found env file');
-    const env = require( 'node-env-file' );
-    env( './.env' );
-}
+// const fs = require('fs');
+// if (fs.existsSync('./.env')) {
+//     console.log('Found env file');
+//     const env = require( 'node-env-file' );
+//     env( './.env' );
+// }
 
-process.env.CISCOSPARK_ACCESS_TOKEN = process.env.access_token;
+process.env['CISCOSPARK_ACCESS_TOKEN'] = process.env.access_token;
 
 const session = require( 'express-session' );
 const passport = require( 'passport' );

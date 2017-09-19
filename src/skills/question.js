@@ -1,5 +1,5 @@
 'use strict';
-
+const debug = require('debug')('Skills:Question');
 const qnaController = require('../qnaController');
 // remove html formatting for Spark Messages
 const reg1 = /(\<p\>)/i;
@@ -11,8 +11,8 @@ const regArray = [/(answer|\/a\/?)(?:\s+)?(\d+)\s+(?:\-\s+)?(\w+.*)$/i]
 
 module.exports = function (controller) {
     controller.on('direct_mention', function (bot, message) {
-        // console.log( 'Debugging answer: ' )
-        // console.log( message )
+        // debug( 'Debugging answer: ' )
+        // debug( message )
         let match;
         for (let reg of regArray) {
             match = reg.exec(message.text)
@@ -25,13 +25,13 @@ module.exports = function (controller) {
         if (match) {
             if (message.html) {
                 filterHtml = message.html.replace(reg5, '').replace(reg4, '').replace(reg3, '').replace(reg1, '').replace(reg2, '');
-                // console.log( 'HTML Filtering: ' )
-                // console.log( filterHtml )
-                // console.log( message.html )
+                // debug( 'HTML Filtering: ' )
+                // debug( filterHtml )
+                // debug( message.html )
                 message.html = filterHtml;
             }
             qnaController.handleAnswer(message).then(response => {
-                console.log('Handled Answer');
+                debug('Handled Answer');
                 let questioner = response.personId;
                 let question;
                 let answer;
@@ -58,7 +58,7 @@ module.exports = function (controller) {
                     markdown: answerMessage
                 }, (err, message) => {
                     if(err) console.error(err)
-                    console.log('Answer sent successfully.')
+                    debug('Answer sent successfully.')
                 })
                 // bot.startPrivateConversationWithPersonId(questioner, (error, convo) => {
                 //     if (error)
@@ -69,7 +69,7 @@ module.exports = function (controller) {
                 //     });
                 // });
                 var mdMessage = `Answer logged. Click ${mdLink} to view all FAQ.`;
-                console.log('Received Answer');
+                debug('Received Answer');
                 bot.reply(message, {
                     markdown: mdMessage
                 });
@@ -136,8 +136,8 @@ module.exports = function (controller) {
             } else {
                 personalMessage = `<strong>Q - </strong>` + `__${message.text}__`;
             }
-            // console.log( 'Debugging' )
-            // console.log( message )
+            // debug( 'Debugging' )
+            // debug( message )
             qnaController.handleQuestion(message).then(room => {
                 if (room) {
                     personalMessage += ' has been logged. '
@@ -153,7 +153,7 @@ module.exports = function (controller) {
                             markdown: personalMessage
                         });
                     });
-                    console.log('Handled question successfully. ');
+                    debug('Handled question successfully. ');
                 } else {
                     let errorMsg = 'Sorry there was an error processing your request.';
                     bot.reply(message, {
@@ -172,10 +172,10 @@ module.exports = function (controller) {
     });
     controller.on('user_space_join', function (bot, data) {
         qnaController.handleMembershipChange(data)
-        console.log('Person Joined')
+        debug('Person Joined')
     });
     controller.on('user_space_leave', function (bot, data) {
-        console.log('Person Left')
+        debug('Person Left')
         qnaController.handleMembershipChange(data)
     });
     controller.hears(/^dbstats/i, 'direct_message', function (bot, message) {

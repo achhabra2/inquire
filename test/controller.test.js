@@ -1,16 +1,10 @@
-const fs = require('fs');
-if (fs.existsSync('./.env')) {
-  console.log('Found env file');
-  const env = require('node-env-file');
-  env('./.env');
-}
+// require('dotenv').config()
 
 const chai = require('chai');
 chai.should();
-const chaiAsPromised = require("chai-as-promised");
 
-chai.use(chaiAsPromised);
 chai.use(require('chai-things'));
+chai.use(require("chai-as-promised"));
 
 const qnaController = require('../src/qnaController');
 
@@ -21,11 +15,14 @@ describe('Controller ', function () {
   it('Should connect to MongoDB', function (done) {
     if (!mongoose.connection.readyState)
       mongoose.connect(process.env.mongo, {
-        useMongoClient: true});
+        useMongoClient: true
+      });
     mongoose.connection.once('open', function () {
       mongoose.connection.readyState.should.equal(1);
       done();
     });
+    if(mongoose.connection.readyState == 1) 
+    done();
   });
 });
 
@@ -38,8 +35,19 @@ describe('Function: Format Text', function () {
   });
 });
 
-describe('Controller Database Functions', function() {
-  it('Should GET MOTDs', function() {
-    return qnaController.getMotd().should.eventually.be.an('array');
+describe('Function: MOTD', function () {
+  let testMotd;
+  const Motd = require('../src/motdModel');
+  before(function () {
+    testMotd = new Motd({
+      message: 'Test Message'
+    });
+    return testMotd.save();
+  });
+  it('Should GET MOTDs', function () {
+    return qnaController.getMotd().should.eventually.contain.an.item.with.property('message', 'Test Message');
+  });
+  after(function() {
+    return Motd.remove(testMotd);
   });
 });

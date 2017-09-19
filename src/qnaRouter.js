@@ -1,5 +1,5 @@
 'use strict';
-
+const debug = require('debug')('Router');
 const express = require( 'express' );
 const bodyParser = require( 'body-parser' );
 const qnaController = require( './qnaController' );
@@ -17,7 +17,7 @@ let errorUrl = base + '/error';
 let apiUrl = base + '/api/spaces/';
 
 router.get( '/motd', ( req, res ) => {
-    console.log( 'Received api query for motds' );
+    debug( 'Received api query for motds' );
     qnaController.getMotd()
         .then( motds => {
             res.json( motds );
@@ -28,7 +28,7 @@ router.get( '/motd', ( req, res ) => {
 
 router.get( '/spaces/:room', ensureAuthenticated, ensureAccessRights, ( req, res ) => {
     let room = req.params.room;
-    console.log( 'Received room api query for' + room );
+    debug( 'Received room api query for' + room );
     let page = 1;
     let limit = 10;
     let search;
@@ -66,7 +66,7 @@ router.get( '/spaces/:room', ensureAuthenticated, ensureAccessRights, ( req, res
 } );
 
 router.get( '/listSpaces', ensureAuthenticated, ( req, res ) => {
-    console.log( 'Received detail api query for all rooms' );
+    debug( 'Received detail api query for all rooms' );
     qnaController.authenticatedRooms( req.user.id )
         .then( rooms => {
             res.json( rooms );
@@ -77,7 +77,7 @@ router.get( '/listSpaces', ensureAuthenticated, ( req, res ) => {
 
 router.get( '/spaces/detail/:room', ensureAuthenticated, ensureAccessRights, ( req, res ) => {
     let room = req.params.room;
-    console.log( 'Received detail api query for' + room );
+    debug( 'Received detail api query for' + room );
     qnaController.findRoom( room )
         .then( roomDetail => {
             res.send( roomDetail );
@@ -93,7 +93,7 @@ router.get( '/updateSpaces', ( req, res ) => {
 
 router.delete( '/questions/:question', ensureAuthenticated, ( req, res ) => {
     let question = req.params.question;
-    console.log( 'Received delete request for ' + question );
+    debug( 'Received delete request for ' + question );
     qnaController.removeQuestion( question )
         .then( roomDetail => {
             res.status( 204 ).end();

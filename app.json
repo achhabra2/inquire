@@ -27,6 +27,10 @@
     "studio_token": {
       "description": "BotKit Studio Access Token",
       "required": false
+    },
+    "secret": {
+      "description": "Webhook Secret",
+      "required": true
     }
   },
   "addons": ["mongolab"]
