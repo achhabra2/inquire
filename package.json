@@ -32,14 +32,16 @@
     "promise": "^7.3.1",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4",
-    "snyk": "^1.38.1",
-    "socket.io": "^1.7.4",
+    "snyk": "^1.41.1",
+    "socket.io": "^2.0.2",
     "superagent": "^3.6.0"
   },
   "scripts": {
     "start": "node -r dotenv/config ./src/server.js",
     "test": "nyc --reporter=html --reporter=text mocha -r dotenv/config",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "devDependencies": {
     "chai-as-promised": "^7.1.1",
@@ -49,5 +51,6 @@
     "nyc": "^11.2.1",
     "sinon": "^3.2.1",
     "supertest": "^3.0.0"
-  }
+  },
+  "snyk": true
 }
