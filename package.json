@@ -33,7 +33,7 @@
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4",
     "snyk": "^1.38.1",
-    "socket.io": "^1.7.4",
+    "socket.io": "^2.0.0",
     "superagent": "^3.6.0"
   },
   "scripts": {
