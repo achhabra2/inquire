@@ -1,0 +1,35 @@
+{
+  "host": "localhost",
+  "port": 3000,
+  "public": "../public/",
+  "paginate": {
+    "default": 10,
+    "max": 100
+  },
+  "mongodb": "YOUR DEV MONGODB INSTANCE",
+  "authentication": {
+    "secret": "JWT SECRET KEY",
+    "strategies": ["jwt"],
+    "path": "/authentication",
+    "service": "users",
+    "cookie": {
+      "enabled": true,
+      "name": "feathers-jwt",
+      "httpOnly": false,
+      "secure": false
+    },
+    "jwt": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "https://inquire.sparkadmins.com",
+      "subject": "anonymous",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "5d"
+    },
+    "ciscospark": {
+      "successRedirect": "http://localhost:3030/#/callback"
+    }
+  }
+}

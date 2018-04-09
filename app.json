@@ -1,0 +1,37 @@
+{
+  "name": "Inquire App",
+  "description": "Question and Answer Sparkbot",
+  "repository": "https://github.com/achhabra2/inquire",
+  "logo": "http://9ccd3fa76afd5c0d8850-e02d51191d1ac7a8190e601c0d9ebc7d.r49.cf1.rackcdn.com/ZDg4YmQ3NWUtYjhjMy00OGNmLWFiYzctNWVjNWNiYzc1OGFjL2ZpbGVzL2xvZ28vYjJlYmE5N2EtZWFjYS00MzJiLWE2ZWMtMzliYTRlZWEyNzFl",
+  "keywords": ["q&a", "question", "answer", "cisco", "spark", "bot"],
+  "env": {
+    "bot_name": {
+      "description": "Name of your Cisco Spark Bot"
+    },
+    "public_address": {
+      "description": "Publicly accessible FDQN of the application. If Heroku use the full URL (eg. https://{APPNAME}.herokuapp.com"
+    },
+    "access_token": {
+      "description": "Cisco Spark Bot Access Token"
+    },
+    "mongo": {
+      "description": "Mongo DB Connection String",
+      "required": false
+    },
+    "oauth_client": {
+      "description": "Oauth Client ID from Cisco Spark"
+    },
+    "oauth_secret": {
+      "description": "Oauth Client Secret from Cisco Spark"
+    },
+    "studio_token": {
+      "description": "BotKit Studio Access Token",
+      "required": false
+    },
+    "secret": {
+      "description": "Webhook Secret",
+      "required": true
+    }
+  },
+  "addons": ["mongolab"]
+}
