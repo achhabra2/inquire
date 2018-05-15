@@ -8,7 +8,8 @@ module.exports = function spaceMemberships(context) {
         'teamId',
         'teamName',
         'sequence',
-        'moderators'
+        'moderators',
+        'answerCount'
       ],
       memberships: {
         $in: [context.params.user.ciscosparkId]

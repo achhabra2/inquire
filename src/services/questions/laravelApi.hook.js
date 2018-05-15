@@ -2,7 +2,8 @@ const errors = require('@feathersjs/errors');
 
 module.exports = {
   parseQuery,
-  formatPagination
+  formatPagination,
+  addAnswerCount
 };
 
 function parseQuery() {
@@ -92,4 +93,27 @@ function formatSort(expression) {
     sort = { createdOn: -1 };
   }
   return sort;
+}
+
+function addAnswerCount() {
+  return async function(context) {
+    try {
+      const spaceId = context.params.query._room;
+      const result = await context.app.service('questions').find({
+        query: {
+          _room: spaceId,
+          answered: true,
+          $limit: 0
+        }
+      });
+      let spaceData = {
+        answerCount: result.total
+      };
+      await context.app.service('spaces').patch(spaceId, spaceData);
+      console.log('Successfully updated answer count for:', spaceId);
+    } catch (error) {
+      console.error('Could not update answer count');
+    }
+    return context;
+  };
 }

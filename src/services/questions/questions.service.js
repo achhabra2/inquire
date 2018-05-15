@@ -24,6 +24,25 @@ module.exports = function(app) {
 
   service.on('patched', async (question, context) => {
     const token = app.get('access_token');
+    if (context.params && context.data.$push) {
+      try {
+        const spaceId = context.params.query._room;
+        const result = await context.app.service('questions').find({
+          query: {
+            _room: spaceId,
+            answered: true,
+            $limit: 0
+          }
+        });
+        let spaceData = {
+          answerCount: result.total
+        };
+        await context.app.service('spaces').patch(spaceId, spaceData);
+        console.log('Successfully updated answer count for:', spaceId);
+      } catch (error) {
+        console.error('Could not update answer count');
+      }
+    }
     if (context.params && context.params.user && context.data.$push) {
       let answerer = question.answers[question.answers.length - 1].personEmail;
       let link =

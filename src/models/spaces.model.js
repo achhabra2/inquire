@@ -22,6 +22,7 @@ module.exports = function(app) {
       type: Number,
       default: '0'
     },
+    answerCount: Number,
     tags: String,
     teamId: String,
     teamName: String,
