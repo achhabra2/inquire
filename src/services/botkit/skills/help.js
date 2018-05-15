@@ -1,5 +1,6 @@
 module.exports = function(controller) {
   // apiai.hears for intents. in this example is 'hello' the intent
+  const helpLink = `[here](${controller.public_address}/#/help)`;
   controller.hears(['help$', 's*?help$'], 'direct_message', function(
     bot,
     message
@@ -16,9 +17,7 @@ module.exports = function(controller) {
     mdMessage +=
       '4. ``open`` - List open ended / unanswered questions in the current Spark Space. <br>';
     mdMessage += 'Do not forget to tag me before each command! Happy FAQing. ';
-    let link = process.env.public_address + '/#/help';
-    let mdLink = `[here](${link})`;
-    let shortHelp = `For the full help page click ${mdLink}. `;
+    let shortHelp = `For the full help page click ${helpLink}. `;
     mdMessage += shortHelp;
     bot.reply(message, {
       markdown: mdMessage
@@ -47,9 +46,7 @@ module.exports = function(controller) {
         markdown: mdMessage
       });
     });
-    let link = process.env.public_address + '/#/help';
-    let mdLink = `[here](${link})`;
-    let shortHelp = `Help has been sent to you individually. For the full help page click ${mdLink}. `;
+    let shortHelp = `Help has been sent to you individually. For the full help page click ${helpLink}. `;
     bot.reply(message, {
       markdown: shortHelp
     });

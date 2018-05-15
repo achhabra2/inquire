@@ -14,6 +14,10 @@ function parseQuery() {
     }
     if (query.$sort && typeof query.$sort !== 'object') {
       query.$sort = formatSort(query.$sort);
+    } else {
+      query.$sort = {
+        createdOn: -1
+      };
     }
     if (query.$search) {
       query.$text = {

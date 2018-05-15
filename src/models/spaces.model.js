@@ -27,6 +27,10 @@ module.exports = function(app) {
     teamName: String,
     lastActivity: Date,
     memberships: [String],
+    mode: {
+      type: String,
+      enum: ['verbose', 'default']
+    },
     moderators: {
       type: [String],
       default: []

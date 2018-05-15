@@ -25,19 +25,32 @@ module.exports = function(app) {
   service.on('patched', async (question, context) => {
     const token = app.get('access_token');
     if (context.params && context.params.user && context.data.$push) {
+      let answerer = question.answers[question.answers.length - 1].personEmail;
+      let link =
+        context.app.get('public_address') + '/#/space/' + question._room;
       let markdown = `Hello <@personEmail:${question.personEmail}>! `;
-      markdown += `Your question has been responded to by: <@personEmail:${
-        question.answers[question.answers.length - 1].personEmail
-      }>. <br>`;
+      markdown += `Your question has been responded to by: <@personEmail:${answerer}>. <br>`;
       let questionText = question.text;
       let answerText = question.answers[question.answers.length - 1].text;
       markdown += `<strong>Q -</strong> ${questionText}<br>`;
       markdown += `<strong>A -</strong> ${answerText}`;
+      let roomNotification = `Question **${
+        question.sequence
+      }** has been answered by <@personEmail:${answerer}>: `;
+      if (answerText.length < 160) {
+        roomNotification += `${answerText}`;
+      } else {
+        roomNotification += `click [here](${link}) to view.`;
+      }
       try {
         await request
           .post('https://api.ciscospark.com/v1/messages')
           .set('Authorization', `Bearer ${token}`)
           .send({ toPersonEmail: question.personEmail, markdown: markdown });
+        await request
+          .post('https://api.ciscospark.com/v1/messages')
+          .set('Authorization', `Bearer ${token}`)
+          .send({ roomId: question._room, markdown: roomNotification });
       } catch (error) {
         console.error(error);
         console.error('Could not send update message');

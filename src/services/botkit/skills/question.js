@@ -7,10 +7,13 @@ module.exports = function(controller) {
   // remove html formatting for Spark Messages
   const reg1 = /(\<p\>)/i;
   const reg2 = /(\<\/p\>)/i;
-  const reg3 = /(\<spark\-mention\sdata\-object\-type\=\"person\"\sdata\-object\-id=\"([a-zA-Z0-9]*)\"\>)/gi;
+  const reg3 = /(\<spark\-mention\sdata\-object\-type\=\"person\"\sdata\-object\-id=\"([a-zA-Z0-9\-]*)\"\>)/gi;
+  const sparkMentionReverse = /(\<spark\-mention\sdata\-object\-id=\"([a-zA-Z0-9\-]*)\"\sdata\-object\-type\=\"person\"\>)/gi;
   const reg4 = /(\<\/spark-mention\>)/gi;
   const reg5 = new RegExp(controller.bot_name, 'gi');
   const regArray = [/(answer|\/a\/?)(?:\s+)?(\d+)\s+(?:\-\s+)?(.+.*)$/i];
+  const onBehalf = /(.*)\/b\s+\<spark\-mention\sdata\-object\-type\=\"person\"\sdata\-object\-id=\"([a-zA-Z0-9\-]*)\"\>.*\<\/spark-mention\>\s+(.*)/i;
+  const onBehalfReverse = /(.*)\/b\s+\<spark\-mention\sdata\-object\-id=\"([a-zA-Z0-9\-]*)\"\sdata\-object\-type\=\"person\"\>.*\<\/spark-mention\>\s+(.*)/i;
 
   // Handler for Answers
   controller.on('direct_mention', function(bot, message) {
@@ -25,9 +28,11 @@ module.exports = function(controller) {
     let mdLink = `[here](${link})`;
     let filterHtml;
     if (message.html) {
+      message.raw_html = message.html;
       filterHtml = message.html
         .replace(reg5, '')
         .replace(reg4, '')
+        .replace(sparkMentionReverse, '')
         .replace(reg3, '')
         .replace(reg1, '')
         .replace(reg2, '');
@@ -86,17 +91,20 @@ module.exports = function(controller) {
           });
         });
     } else {
-      let questioner = message.user;
       let personalMessage;
       let mdMessage;
+      if (onBehalf.test(message.raw_html)) {
+        let behalfMatch = onBehalf.exec(message.raw_html);
+        message.html = behalfMatch[3];
+        message.text = behalfMatch[3];
+        message.data.personId = behalfMatch[2];
+      } else if (onBehalfReverse.test(message.raw_html)) {
+        let behalfMatch = onBehalfReverse.exec(message.raw_html);
+        message.html = behalfMatch[3];
+        message.text = behalfMatch[3];
+        message.data.personId = behalfMatch[2];
+      }
       if (message.html) {
-        filterHtml = message.html
-          .replace(reg5, '')
-          .replace(reg4, '')
-          .replace(reg3, '')
-          .replace(reg1, '')
-          .replace(reg2, '');
-        message.html = filterHtml;
         personalMessage = '<strong>Q - </strong>' + `${message.html}`;
       } else {
         personalMessage = '<strong>Q - </strong>' + `__${message.text}__`;

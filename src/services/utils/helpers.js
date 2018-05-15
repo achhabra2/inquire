@@ -29,6 +29,20 @@ class Helpers {
     return message;
   }
 
+  async patchRoom(spaceId) {
+    try {
+      const response = await request
+        .get(`https://api.ciscospark.com/v1/rooms/${spaceId}`)
+        .set('Authorization', `Bearer ${this.app.get('access_token')}`);
+      const room = response.body;
+      let patch = {};
+      patch.displayName = room.title;
+      if (room.teamId) patch.teamId = room.teamId;
+      await this.app.service('spaces').patch(spaceId, patch);
+    } catch (error) {
+      console.error('Could not update space details: ', spaceId);
+    }
+  }
   /**
    *
    *
@@ -154,6 +168,8 @@ class Helpers {
     try {
       const person = await this.getPerson(message.data.personId);
       message.personDisplayName = person.displayName;
+      message.user = person.emails[0];
+      message.data.personId = person.id;
       return message;
     } catch (error) {
       console.error('Could not attach person details');
@@ -337,7 +353,7 @@ class Helpers {
       try {
         const room = await this.checkRoom(event);
         if (room) {
-          await this.updateRoomMemberships(event);
+          await this.updateRoomMemberships(event.channel);
           const update = { active: true };
           return await this.app.service('spaces').patch(event.channel, update);
         }
@@ -466,22 +482,15 @@ class Helpers {
     return this.app.service('questions').find({ query });
   }
 
-  // checkRights(personId, roomId) {
-  //   let query = {
-  //     personId: personId,
-  //     roomId: roomId
-  //   };
-  //   return Spark.memberships.list(query).then(response => {
-  //     if (response.items.length > 0)
-  //       return true;
-  //     else
-  //       return false;
-  //   })
-  //     .catch(err => {
-  //       console.error(err);
-  //       return false;
-  //     });
-  // }
+  async switchMode(spaceId, mode) {
+    const update = { mode: mode };
+    try {
+      const newRoom = await this.app.service('spaces').patch(spaceId, update);
+      return newRoom;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = Helpers;
