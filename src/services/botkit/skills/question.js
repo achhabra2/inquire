@@ -1,8 +1,13 @@
 const logger = require('winston');
 const Debug = require('debug');
-
+const fs = require('fs');
+const path = require('path');
 const debug = Debug('botkit:skills:question');
 
+const mdError = fs.readFileSync(
+  path.resolve(__dirname, '../templates/error.md'),
+  'utf8'
+);
 module.exports = function(controller) {
   // remove html formatting for Spark Messages
   const reg1 = /(\<p\>)/i;
