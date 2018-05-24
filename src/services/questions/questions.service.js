@@ -90,6 +90,7 @@ module.exports = function(app) {
     }
   });
   service.on('created', async (question, context) => {
+    updateQuestionCount(question, context);
     if (context.params && context.params.user) {
       const token = app.get('access_token');
       const markdown = `**Q #${question.sequence}** has been asked by __${
@@ -107,6 +108,7 @@ module.exports = function(app) {
     }
   });
   service.on('removed', async (question, context) => {
+    updateQuestionCount(question, context);
     if (context.params && context.params.user) {
       const token = app.get('access_token');
       const markdown = `**Q #${question.sequence}** has been removed.`;
@@ -122,3 +124,22 @@ module.exports = function(app) {
     }
   });
 };
+
+async function updateQuestionCount(question, context) {
+  try {
+    const spaceId = question._room;
+    const result = await context.app.service('questions').find({
+      query: {
+        _room: spaceId,
+        $limit: 0
+      }
+    });
+    let spaceData = {
+      questionCount: result.total
+    };
+    await context.app.service('spaces').patch(spaceId, spaceData);
+    console.log('Successfully updated question count for:', spaceId);
+  } catch (error) {
+    console.error('Could not update answer count');
+  }
+}

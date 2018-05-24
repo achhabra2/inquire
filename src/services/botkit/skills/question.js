@@ -23,6 +23,13 @@ module.exports = function(controller) {
       match = reg.exec(message.text);
       if (match) break;
     }
+    // if (message.data.hasOwnProperty('files') && message.data.files.length > 0) {
+    //   console.log('files received', message.data.files);
+    //   message.html += '<br/>Attachments:';
+    //   message.data.files.forEach((file, index) => {
+    //     message.html += `<a href="${file}">File${index + 1}</a>`;
+    //   });
+    // }
     logger.log('RegEx Match: ', match);
     let link = controller.public_address + '/#/space/' + message.channel;
     let mdLink = `[here](${link})`;

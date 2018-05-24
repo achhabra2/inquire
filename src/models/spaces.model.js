@@ -23,6 +23,8 @@ module.exports = function(app) {
       default: '0'
     },
     answerCount: Number,
+    questionCount: Number,
+    sticky: String,
     tags: String,
     teamId: String,
     teamName: String,

@@ -1,9 +1,11 @@
 const errors = require('@feathersjs/errors');
+const anchorme = require('anchorme').default;
 
 module.exports = {
   parseQuery,
   formatPagination,
-  addAnswerCount
+  addAnswerCount,
+  addAnchorTag
 };
 
 function parseQuery() {
@@ -113,6 +115,41 @@ function addAnswerCount() {
       console.log('Successfully updated answer count for:', spaceId);
     } catch (error) {
       console.error('Could not update answer count');
+    }
+    return context;
+  };
+}
+
+const anchormeOptions = {
+  truncate: [15, 15],
+  attributes: [
+    {
+      name: 'target',
+      value: '_blank'
+    }
+  ]
+};
+
+function addAnchorTag() {
+  return async function(context) {
+    if (context.data.html) {
+      try {
+        let html = context.data.html;
+        context.data.html = anchorme(html, anchormeOptions);
+      } catch (error) {
+        console.error('Could not truncate url');
+      }
+    }
+    if (
+      context.data.hasOwnProperty('$push') &&
+      context.data.$push.answers.html
+    ) {
+      try {
+        let html = context.data.$push.answers.html;
+        context.data.$push.answers.html = anchorme(html, anchormeOptions);
+      } catch (error) {
+        console.error('Could not truncate url');
+      }
     }
     return context;
   };

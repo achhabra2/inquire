@@ -2,16 +2,16 @@ const { authenticate } = require('@feathersjs/authentication').hooks;
 const {
   parseQuery,
   formatPagination,
-  addAnswerCount
+  addAnchorTag
 } = require('./laravelApi.hook');
 module.exports = {
   before: {
     all: [authenticate('jwt'), parseQuery()],
     find: [],
     get: [],
-    create: [],
+    create: [addAnchorTag()],
     update: [],
-    patch: [],
+    patch: [addAnchorTag()],
     remove: []
   },
 

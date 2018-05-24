@@ -491,6 +491,39 @@ class Helpers {
       throw error;
     }
   }
+
+  async checkModerator(message) {
+    try {
+      const space = await this.app.service('spaces').get(message.channel);
+      if (space.moderators.length > 0) {
+        if (space.moderators.indexOf(message.actorId) !== -1) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return true;
+      }
+    } catch (error) {
+      console.error('Could not verify moderation rights');
+      return true;
+    }
+  }
+
+  async updateSticky(message) {
+    try {
+      let update = {
+        sticky: message.html
+      };
+      return this.app.service('spaces').patch(message.channel, update);
+    } catch (error) {
+      console.error(
+        'Could not update sticky message for space',
+        message.channel
+      );
+      throw new Error('Could not update');
+    }
+  }
 }
 
 module.exports = Helpers;
