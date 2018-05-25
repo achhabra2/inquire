@@ -3,6 +3,7 @@ const createService = require('feathers-mongoose');
 const request = require('superagent');
 const createModel = require('../../models/questions.model');
 const hooks = require('./questions.hooks');
+const { formatPersonAnswer } = require('../botkit/templates/responses');
 
 module.exports = function(app) {
   const Model = createModel(app);
@@ -45,21 +46,26 @@ module.exports = function(app) {
     }
     if (context.params && context.params.user && context.data.$push) {
       let answerer = question.answers[question.answers.length - 1].personEmail;
+      let questioner = question.personEmail;
       let link =
         context.app.get('public_address') + '/#/space/' + question._room;
-      let markdown = `Hello <@personEmail:${question.personEmail}>! `;
-      markdown += `Your question has been responded to by: <@personEmail:${answerer}>. <br>`;
       let questionText = question.text;
       let answerText = question.answers[question.answers.length - 1].text;
-      markdown += `<strong>Q -</strong> ${questionText}<br>`;
-      markdown += `<strong>A -</strong> ${answerText}`;
-      let roomNotification = `Question **${
-        question.sequence
-      }** has been answered by <@personEmail:${answerer}>: `;
+      const markdown = formatPersonAnswer({
+        questioner,
+        answerer,
+        question: questionText,
+        answer: answerText
+      });
+      let roomNotification = `
+      <blockquote class="info">
+      Question **${question.sequence}** has been answered by 
+      <@personEmail:${answerer}>: 
+      `;
       if (answerText.length < 160) {
-        roomNotification += `${answerText}`;
+        roomNotification += `${answerText} </blockquote>`;
       } else {
-        roomNotification += `click [here](${link}) to view.`;
+        roomNotification += `click [here](${link}) to view. </blockquote>`;
       }
       try {
         await request
@@ -77,7 +83,7 @@ module.exports = function(app) {
     } else if (!context.data.$push) {
       let markdown = `**Q #${question.sequence}** has been edited by __${
         question.displayName
-      }__: <br><blockquote>${question.text}</blockquote>`;
+      }__: <br><blockquote class="info">${question.text}</blockquote>`;
       try {
         await request
           .post('https://api.ciscospark.com/v1/messages')
@@ -95,7 +101,7 @@ module.exports = function(app) {
       const token = app.get('access_token');
       const markdown = `**Q #${question.sequence}** has been asked by __${
         question.displayName
-      }__: <br><blockquote>${question.text}</blockquote>`;
+      }__: <br><blockquote class="info">${question.text}</blockquote>`;
       try {
         await request
           .post('https://api.ciscospark.com/v1/messages')
@@ -111,7 +117,10 @@ module.exports = function(app) {
     updateQuestionCount(question, context);
     if (context.params && context.params.user) {
       const token = app.get('access_token');
-      const markdown = `**Q #${question.sequence}** has been removed.`;
+      const markdown = `
+      <blockquote class="info">**Q #${question.sequence}** has been removed. 
+      </blockquote>
+      `;
       try {
         await request
           .post('https://api.ciscospark.com/v1/messages')
