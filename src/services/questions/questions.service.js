@@ -52,8 +52,8 @@ module.exports = function(app) {
       let questionText = question.text;
       let answerText = question.answers[question.answers.length - 1].text;
       const markdown = formatPersonAnswer({
-        questioner,
-        answerer,
+        questioner: question.displayName,
+        answerer: question.answers[question.answers.length - 1].displayName,
         question: questionText,
         answer: answerText
       });

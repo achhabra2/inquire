@@ -41,9 +41,9 @@ function formatGroupQuestion({ questioner, link, sequence }) {
  */
 function formatPersonAnswer({ answer, question, answerer, questioner }) {
   const answerMessage = `
-  Hello! Your question has been answered. 
+  Hello *${questioner}*! Your question has been answered by **${answerer}**.
   <blockquote class="warning">${question}</blockquote>
-  <blockquote class="success"><@personEmail:${answerer}>: ${answer}</blockquote>
+  <blockquote class="success">${answer}</blockquote>
   `;
   return answerMessage;
 }

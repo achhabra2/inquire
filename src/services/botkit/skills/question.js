@@ -64,10 +64,8 @@ module.exports = function(controller) {
         .then(response => {
           debug('Handled Answer');
           let questioner = response.personId;
-
-          const questionerEmail = response.personEmail;
           const answerer =
-            response.answers[response.answers.length - 1].personEmail;
+            response.answers[response.answers.length - 1].displayName;
           const question = response.html || response.text;
           const answer =
             response.answers[response.answers.length - 1].html ||
@@ -76,7 +74,7 @@ module.exports = function(controller) {
             answer,
             question,
             answerer,
-            questioner: questionerEmail
+            questioner: response.displayName
           });
           bot.send(
             {
