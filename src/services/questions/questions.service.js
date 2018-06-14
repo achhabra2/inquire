@@ -57,15 +57,13 @@ module.exports = function(app) {
         question: questionText,
         answer: answerText
       });
-      let roomNotification = `
-      <blockquote class="info">
-      Question **${question.sequence}** has been answered by 
-      <@personEmail:${answerer}>: 
-      `;
+      let roomNotification = `Question **${
+        question.sequence
+      }** has been answered by <@personEmail:${answerer}>: `;
       if (answerText.length < 160) {
-        roomNotification += `${answerText} </blockquote>`;
+        roomNotification += `<blockquote class="info">${answerText}</blockquote>`;
       } else {
-        roomNotification += `click [here](${link}) to view. </blockquote>`;
+        roomNotification += `click [here](${link}) to view.`;
       }
       try {
         await request
@@ -77,7 +75,6 @@ module.exports = function(app) {
           .set('Authorization', `Bearer ${token}`)
           .send({ roomId: question._room, markdown: roomNotification });
       } catch (error) {
-        console.error(error);
         console.error('Could not send update message');
       }
     } else if (!context.data.$push) {

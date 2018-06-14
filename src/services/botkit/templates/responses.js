@@ -5,6 +5,12 @@ module.exports = {
   formatPersonQuestion
 };
 
+/**
+ *
+ *
+ * @param {string} { link }
+ * @returns {string}
+ */
 function formatGroupAnswer({ link }) {
   const message = `
   <blockquote class="info">Answer logged. Click <a href="${link}">here</a> to view all FAQ.</blockquote>
@@ -12,6 +18,12 @@ function formatGroupAnswer({ link }) {
   return message;
 }
 
+/**
+ *
+ *
+ * @param {any} { questioner, link, sequence }
+ * @returns {string}
+ */
 function formatGroupQuestion({ questioner, link, sequence }) {
   const mdMessage = `
   <blockquote class="info">
@@ -21,15 +33,27 @@ function formatGroupQuestion({ questioner, link, sequence }) {
   return mdMessage;
 }
 
+/**
+ *
+ *
+ * @param {any} { answer, question, answerer, questioner }
+ * @returns {string}
+ */
 function formatPersonAnswer({ answer, question, answerer, questioner }) {
   const answerMessage = `
-  Hello <@personEmail:${questioner}>! Your question has been answered. 
+  Hello! Your question has been answered. 
   <blockquote class="warning">${question}</blockquote>
   <blockquote class="success"><@personEmail:${answerer}>: ${answer}</blockquote>
   `;
   return answerMessage;
 }
 
+/**
+ *
+ *
+ * @param {any} { question }
+ * @returns {string}
+ */
 function formatPersonQuestion({ question }) {
   const message = `
   Your Question has been logged successfully.
