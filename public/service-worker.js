@@ -14,10 +14,13 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.2.0/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.d604f9dc3eaac89debb8e30e943728a0.js"
+  "/precache-manifest.6fac7411ded69180bafd7dccbb093cc8.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "inquire-ui-v2"});
+
+workbox.skipWaiting();
+workbox.clientsClaim();
 
 /**
  * The workboxSW.precacheAndRoute() method efficiently caches and responds to

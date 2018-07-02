@@ -1,8 +1,8 @@
 // users-model.js - A mongoose model
-// 
+//
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
-module.exports = function (app) {
+module.exports = function(app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
   const userSchema = new Schema({
@@ -24,6 +24,22 @@ module.exports = function (app) {
       type: Date,
       default: Date.now()
     }
+  });
+
+  userSchema.virtual('webhooks', {
+    ref: 'webhooks',
+    localField: '_id',
+    foreignField: 'ownerId'
+  });
+
+  userSchema.set('toJSON', {
+    getters: true,
+    virtuals: true
+  });
+
+  userSchema.set('toObject', {
+    getters: true,
+    virtuals: true
   });
 
   return mongooseClient.model('users', userSchema);

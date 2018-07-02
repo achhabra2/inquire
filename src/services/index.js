@@ -12,6 +12,8 @@ const botkit = require('./botkit/botkit.service.js');
 
 const feedback = require('./feedback/feedback.service.js');
 
+const webhooks = require('./webhooks/webhooks.service.js');
+
 module.exports = function(app) {
   app.configure(questions);
   app.configure(spaces);
@@ -19,4 +21,5 @@ module.exports = function(app) {
   app.configure(motds);
   app.configure(botkit);
   app.configure(feedback);
+  app.configure(webhooks);
 };

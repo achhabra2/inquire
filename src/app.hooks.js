@@ -1,9 +1,10 @@
 // Application hooks that run for every service
 const logger = require('./hooks/logger');
+const { publishWebhook } = require('./services/webhooks/publish.webhook');
 
 module.exports = {
   before: {
-    all: [ logger() ],
+    all: [logger()],
     find: [],
     get: [],
     create: [],
@@ -13,17 +14,17 @@ module.exports = {
   },
 
   after: {
-    all: [ logger() ],
+    all: [logger()],
     find: [],
     get: [],
-    create: [],
-    update: [],
-    patch: [],
-    remove: []
+    create: [publishWebhook()],
+    update: [publishWebhook()],
+    patch: [publishWebhook()],
+    remove: [publishWebhook()]
   },
 
   error: {
-    all: [ logger() ],
+    all: [logger()],
     find: [],
     get: [],
     create: [],

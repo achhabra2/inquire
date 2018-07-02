@@ -1,8 +1,8 @@
 // questions-model.js - A mongoose model
-// 
+//
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
-module.exports = function (app) {
+module.exports = function(app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
 
@@ -17,6 +17,8 @@ module.exports = function (app) {
       default: '1'
     },
     upvotes: Number,
+    messageId: String,
+    files: [String],
     createdOn: {
       type: Date,
       default: Date.now()
@@ -57,6 +59,8 @@ module.exports = function (app) {
       type: Boolean,
       default: false
     },
+    messageId: String,
+    files: [String],
     answers: [answerSchema],
     createdOn: {
       type: Date,

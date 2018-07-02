@@ -223,6 +223,9 @@ class Helpers {
     if (message.html) {
       question.html = message.html;
     }
+    if (message.data.files) {
+      question.files = message.data.files;
+    }
     await this.app.service('spaces').patch(room._id, room);
     return this.app.service('questions').create(question);
   }
@@ -283,6 +286,9 @@ class Helpers {
     };
     if (htmlMessage) {
       answer.html = htmlMessage;
+    }
+    if (message.data.files) {
+      answer.files = message.data.files;
     }
     let query = {
       _room: message.channel,

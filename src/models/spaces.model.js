@@ -49,7 +49,7 @@ module.exports = function(app) {
   });
 
   qnaRoomSchema.virtual('questions', {
-    ref: 'Question',
+    ref: 'questions',
     localField: '_id',
     foreignField: '_room'
   });
