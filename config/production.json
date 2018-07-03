@@ -1,0 +1,9 @@
+{
+  "host": "inquire.sparkadmins.com",
+  "port": "3000",
+  "authentication": {
+    "ciscospark": {
+      "successRedirect": "/#/callback"
+    }
+  }
+}
