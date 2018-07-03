@@ -484,7 +484,7 @@ class Helpers {
         $search: search
       };
     }
-    console.log('Running Query: ', query);
+    // console.log('Running Query: ', query);
     return this.app.service('questions').find({ query });
   }
 

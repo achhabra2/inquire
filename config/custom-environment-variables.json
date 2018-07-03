@@ -6,5 +6,8 @@
   "oauth_secret": "OAUTH_SECRET",
   "studio_token": "STUDIO_TOKEN",
   "bot_name": "BOT_NAME",
-  "secret": "SECRET"
+  "secret": "SECRET",
+  "authentication": {
+    "secret": "JWT_SECRET"
+  }
 }

@@ -4,11 +4,11 @@
   "public": "../public/",
   "paginate": {
     "default": 10,
-    "max": 100
+    "max": 1000
   },
-  "mongodb": "YOUR DEV MONGODB INSTANCE",
+  "mongodb": "populated from env",
   "authentication": {
-    "secret": "JWT SECRET KEY",
+    "secret": "populated from env",
     "strategies": ["jwt"],
     "path": "/authentication",
     "service": "users",
@@ -26,10 +26,10 @@
       "subject": "anonymous",
       "issuer": "feathers",
       "algorithm": "HS256",
-      "expiresIn": "5d"
+      "expiresIn": "14d"
     },
     "ciscospark": {
-      "successRedirect": "http://localhost:3030/#/callback"
+      "successRedirect": "http://localhost:3000/#/callback"
     }
   }
 }

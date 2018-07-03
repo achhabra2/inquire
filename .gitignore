@@ -117,4 +117,3 @@ data/
 
 # Environment specific settings
 .env
-config/default.json

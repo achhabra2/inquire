@@ -13,18 +13,6 @@ module.exports = function(app) {
   app.configure(authentication(config));
   app.configure(jwt());
 
-  app.configure(
-    oauth2(
-      Object.assign(
-        {
-          name: 'github',
-          Strategy: GithubStrategy
-        },
-        config.github
-      )
-    )
-  );
-
   let scopes;
   if (app.get('env') === 'production') {
     scopes = [
