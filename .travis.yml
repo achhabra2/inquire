@@ -3,6 +3,8 @@ language: node_js
 node_js:
   - node
   - '9'
+before_script:
+  - sleep 15
 services:
   - mongodb
 notifications:
