@@ -52,11 +52,12 @@ Set the following environment variables:
 
 | EV Name        | Description                                        |
 | -------------- | -------------------------------------------------- |
-| bot_name       | The name of your Cisco Spark Bot                   |
-| public_address | The public DNS that you app will be accessible at. |
-| access_token   | Cisco Spark Bot Access Token From **(1)**          |
-| mongodb        | MongoDB Connection String                          |
-| oauth_client   | Oauth Client ID From **(2)**                       |
-| oauth_secret   | Oauth Client Secret From **(2)**                   |
-| studio_token   | BotKit Studio Token from **(3)**                   |
-| secret         | Webhook Token Secret                               |
+| BOT_NAME       | The name of your Cisco Spark Bot                   |
+| PUBLIC_ADDRESS | The public DNS that you app will be accessible at. |
+| ACCESS_TOKEN   | Cisco Spark Bot Access Token From **(1)**          |
+| MONGODB_URI    | MongoDB Connection String                          |
+| OAUTH_CLIENT   | Oauth Client ID From **(2)**                       |
+| OAUTH_SECRET   | Oauth Client Secret From **(2)**                   |
+| STUDIO_TOKEN   | BotKit Studio Token from **(3)**                   |
+| SECRET         | Webhook Token Secret                               |
+| JWT_SECRET     | Secret used to sign JWT                            |
