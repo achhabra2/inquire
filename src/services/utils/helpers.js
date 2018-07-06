@@ -211,7 +211,7 @@ class Helpers {
     message = this.formatText(message);
     room.sequence += 1;
     room.lastActivity = Date.now();
-    let question = {
+    const question = {
       _room: message.channel,
       personEmail: message.user,
       personId: message.data.personId,
@@ -226,8 +226,9 @@ class Helpers {
     if (message.data.files) {
       question.files = message.data.files;
     }
-    await this.app.service('spaces').patch(room._id, room);
-    return this.app.service('questions').create(question);
+    const space = await this.app.service('spaces').patch(room._id, room);
+    const record = await this.app.service('questions').create(question);
+    return { question: record, space };
   }
 
   /**
@@ -399,9 +400,10 @@ class Helpers {
    */
   async handleAnswer(message) {
     try {
-      await this.updateRoomActivity(message.channel);
+      const space = await this.updateRoomActivity(message.channel);
       const updatedMessage = await this.getUserDetails(message);
-      return await this.addAnswer(updatedMessage);
+      const question = await this.addAnswer(updatedMessage);
+      return { space, question };
     } catch (error) {
       console.error(error);
     }

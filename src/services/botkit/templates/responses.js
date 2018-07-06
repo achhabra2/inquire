@@ -39,10 +39,18 @@ function formatGroupQuestion({ questioner, link, sequence }) {
  * @param {any} { answer, question, answerer, questioner }
  * @returns {string}
  */
-function formatPersonAnswer({ answer, question, answerer, questioner }) {
+function formatPersonAnswer({
+  answer,
+  question,
+  answerer,
+  questioner,
+  sequence = '',
+  space = ''
+}) {
   const answerMessage = `
-  Hello *${questioner}*! Your question has been answered by **${answerer}**.
-  <blockquote class="warning">${question}</blockquote>
+  Your question has been answered by *${answerer}*. <br>
+  **${'Q #' + sequence}** ${`&nbsp;in <code>${space}</code>`}: <br>
+  <blockquote class="danger">${question}</blockquote>
   <blockquote class="success">${answer}</blockquote>
   `;
   return answerMessage;
@@ -54,10 +62,11 @@ function formatPersonAnswer({ answer, question, answerer, questioner }) {
  * @param {any} { question }
  * @returns {string}
  */
-function formatPersonQuestion({ question }) {
+function formatPersonQuestion({ question, sequence = '', space = '' }) {
   const message = `
-  Your Question has been logged successfully.
-  <blockquote class="warning">${question}</blockquote>
+  Your **${'Q #' +
+    sequence}** ${`&nbsp;in <code>${space}</code>`} has been recorded: <br>
+  <blockquote class="danger">${question}</blockquote>
   `;
   return message;
 }

@@ -35,13 +35,7 @@ module.exports = function(controller) {
       match = reg.exec(message.text);
       if (match) break;
     }
-    // if (message.data.hasOwnProperty('files') && message.data.files.length > 0) {
-    //   console.log('files received', message.data.files);
-    //   message.html += '<br/>Attachments:';
-    //   message.data.files.forEach((file, index) => {
-    //     message.html += `<a href="${file}">File${index + 1}</a>`;
-    //   });
-    // }
+
     logger.log('RegEx Match: ', match);
     let link = controller.public_address + '/#/space/' + message.channel;
     let mdLink = `[here](${link})`;
@@ -61,20 +55,23 @@ module.exports = function(controller) {
       console.log('Handling Answer message', message.text);
       controller.utils
         .handleAnswer(message)
-        .then(response => {
+        .then(({ question, space }) => {
           debug('Handled Answer');
-          let questioner = response.personId;
+          let questioner = question.personId;
+          const sequence = question.sequence;
           const answerer =
-            response.answers[response.answers.length - 1].displayName;
-          const question = response.html || response.text;
+            question.answers[question.answers.length - 1].displayName;
+          const questionText = question.html || question.text;
           const answer =
-            response.answers[response.answers.length - 1].html ||
-            response.answers[response.answers.length - 1].text;
+            question.answers[question.answers.length - 1].html ||
+            question.answers[question.answers.length - 1].text;
           const answerMessage = formatPersonAnswer({
             answer,
-            question,
+            question: questionText,
             answerer,
-            questioner: response.displayName
+            sequence,
+            questioner: question.displayName,
+            space: space.displayName
           });
           bot.send(
             {
@@ -116,17 +113,21 @@ module.exports = function(controller) {
       // debug( message )
       controller.utils
         .handleQuestion(message)
-        .then(room => {
-          if (room) {
+        .then(result => {
+          if (result) {
             const questioner = message.user;
-            const sequence = room.sequence;
+            const sequence = result.question.sequence;
             const question = message.html || message.text;
             const mdMessage = formatGroupQuestion({
               questioner,
               link,
               sequence
             });
-            const personalMessage = formatPersonQuestion({ question });
+            const personalMessage = formatPersonQuestion({
+              question,
+              sequence,
+              space: result.space.displayName
+            });
             bot.reply(message, {
               markdown: mdMessage
             });
@@ -180,17 +181,14 @@ module.exports = function(controller) {
         .listQuestions(message.channel, 'unanswered')
         .then(response => {
           let mdMessage;
-          let questioner = message;
           let link = controller.public_address + '/#/space/' + message.channel;
           let mdLink = `[here](${link})`;
           if (response.data.length > 0) {
-            mdMessage = `<@personEmail:${
-              message.user
-            }> Here are the last 10 unanswered questions: <br>`;
+            mdMessage = 'Here are the last 10 unanswered questions: <br>';
             response.data.forEach((doc, index) => {
-              mdMessage += `Question **${doc.sequence}**: _${doc.text}_ by ${
-                doc.displayName
-              }.<br>`;
+              mdMessage += `<blockquote>Q #**${doc.sequence}**: _${
+                doc.text
+              }_ by ${doc.displayName}.</blockquote>`;
               if (index == 9) {
                 mdMessage += `Click ${mdLink} for more. `;
               }

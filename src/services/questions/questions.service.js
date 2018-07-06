@@ -25,6 +25,7 @@ module.exports = function(app) {
 
   service.on('patched', async (question, context) => {
     const token = app.get('access_token');
+    let updatedSpace;
     if (context.params && context.data.$push) {
       try {
         const spaceId = context.params.query._room;
@@ -38,7 +39,9 @@ module.exports = function(app) {
         let spaceData = {
           answerCount: result.total
         };
-        await context.app.service('spaces').patch(spaceId, spaceData);
+        updatedSpace = await context.app
+          .service('spaces')
+          .patch(spaceId, spaceData);
         console.log('Successfully updated answer count for:', spaceId);
       } catch (error) {
         console.error('Could not update answer count');
@@ -46,7 +49,6 @@ module.exports = function(app) {
     }
     if (context.params && context.params.user && context.data.$push) {
       let answerer = question.answers[question.answers.length - 1].personEmail;
-      let questioner = question.personEmail;
       let link =
         context.app.get('public_address') + '/#/space/' + question._room;
       let questionText = question.text;
@@ -55,13 +57,15 @@ module.exports = function(app) {
         questioner: question.displayName,
         answerer: question.answers[question.answers.length - 1].displayName,
         question: questionText,
-        answer: answerText
+        answer: answerText,
+        sequence: question.sequence,
+        space: updatedSpace.displayName
       });
-      let roomNotification = `Question **${
+      let roomNotification = `**Q #${
         question.sequence
       }** has been answered by <@personEmail:${answerer}>: `;
       if (answerText.length < 160) {
-        roomNotification += `<blockquote class="info">${answerText}</blockquote>`;
+        roomNotification += `<blockquote class="success">${answerText}</blockquote>`;
       } else {
         roomNotification += `click [here](${link}) to view.`;
       }
@@ -98,7 +102,7 @@ module.exports = function(app) {
       const token = app.get('access_token');
       const markdown = `**Q #${question.sequence}** has been asked by __${
         question.displayName
-      }__: <br><blockquote class="info">${question.text}</blockquote>`;
+      }__: <br><blockquote class="danger">${question.text}</blockquote>`;
       try {
         await request
           .post('https://api.ciscospark.com/v1/messages')
