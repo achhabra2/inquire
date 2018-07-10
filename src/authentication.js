@@ -2,7 +2,6 @@ const authentication = require('@feathersjs/authentication');
 const jwt = require('@feathersjs/authentication-jwt');
 
 const oauth2 = require('@feathersjs/authentication-oauth2');
-const GithubStrategy = require('passport-github');
 const CiscoSparkStrategy = require('passport-cisco-spark');
 const makeHandler = require('./oauth-handler');
 
@@ -22,7 +21,13 @@ module.exports = function(app) {
       'spark:teams_read'
     ];
   } else {
-    scopes = ['spark:all'];
+    scopes = [
+      'spark:people_read',
+      'spark:messages_read',
+      'spark:rooms_read',
+      'spark:teams_read'
+    ];
+    // scopes = ['spark:all'];
   }
   app.configure(
     oauth2(

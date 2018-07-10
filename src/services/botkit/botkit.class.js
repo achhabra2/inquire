@@ -2,6 +2,7 @@
 const express = require('@feathersjs/express');
 const Botkit = require('botkit');
 const Helpers = require('../utils');
+const logger = require('../../winston');
 
 module.exports = function(app) {
   const utils = new Helpers(app);
@@ -9,6 +10,7 @@ module.exports = function(app) {
   // Create the Botkit controller, which controls all instances of the bot.
   const controller = Botkit.sparkbot({
     debug: false,
+    logger,
     log: true,
     public_address: app.get('public_address'),
     ciscospark_access_token: app.get('access_token'),

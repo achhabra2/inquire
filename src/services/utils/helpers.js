@@ -1,10 +1,9 @@
 const request = require('superagent');
 const parseLink = require('parse-link-header');
-const Debug = require('debug');
 
 const answerRegex = /(answer|\/a\/?)(?:\s+)?(\d+)\s+(?:\-\s+)?(.+.*)$/i;
 
-const debug = Debug('botkit:utils');
+const logger = require('../../winston');
 
 /**
  * Helper methods for Inquire on Botkit
@@ -40,7 +39,7 @@ class Helpers {
       if (room.teamId) patch.teamId = room.teamId;
       await this.app.service('spaces').patch(spaceId, patch);
     } catch (error) {
-      console.error('Could not update space details: ', spaceId);
+      logger.error('Could not update space details: ', spaceId);
     }
   }
   /**
@@ -70,7 +69,7 @@ class Helpers {
       const newRoom = await this.app.service('spaces').patch(roomId, update);
       return newRoom;
     } catch (error) {
-      debug('Couldn\'t update Room Activity.');
+      logger.info('Couldn\'t update Room Activity.');
     }
   }
 
@@ -102,8 +101,6 @@ class Helpers {
       .then(response => {
         let links;
         let responseArray = members.concat(response.body.items);
-        // console.log(`ResponseArray: ${JSON.stringify(responseArray)}`);
-        // console.log(`Response headers ${JSON.stringify(response.headers)}`);
         if (response.headers.link) {
           links = parseLink(response.headers.link);
           if (links.next.url) {
@@ -136,7 +133,7 @@ class Helpers {
       const space = await this.app.service('spaces').patch(roomId, patch);
       return space;
     } catch (error) {
-      console.error(error);
+      logger.error('Could not update room memberships for:', roomId);
     }
   }
 
@@ -148,11 +145,11 @@ class Helpers {
    * @memberof Helpers
    */
   async handleMembershipChange(data) {
-    const room = await this.checkRoom(data);
-    if (room) {
+    try {
+      const room = await this.checkRoom(data);
       return this.updateRoomMemberships(data.channel);
-    } else {
-      console.error('Existing room not found');
+    } catch (error) {
+      logger.error('Existing room not found: ', data.channel);
       return null;
     }
   }
@@ -172,7 +169,7 @@ class Helpers {
       message.data.personId = person.id;
       return message;
     } catch (error) {
-      console.error('Could not attach person details');
+      logger.error('Could not attach person details');
       return message;
     }
   }
@@ -194,7 +191,7 @@ class Helpers {
       if (room.teamId) message.roomTeamId = room.teamId;
       return message;
     } catch (error) {
-      console.error('Could not get Room details');
+      logger.error('Could not get Room details');
       return message;
     }
   }
@@ -333,11 +330,11 @@ class Helpers {
    * @memberof Helpers
    */
   async handleQuestion(message) {
-    console.log('Incoming message is:', message.text);
+    logger.info('Incoming message is:', message.text);
     let updatedMessage;
     try {
       const room = await this.checkRoom(message);
-      console.log('Found Room: ', room._id);
+      logger.info('Found Room: ', room._id);
       updatedMessage = await this.getUserDetails(message);
       return this.addQuestion(updatedMessage, room);
     } catch (error) {
@@ -365,13 +362,13 @@ class Helpers {
           return await this.app.service('spaces').patch(event.channel, update);
         }
       } catch (error) {
-        console.log('No Room found for:', event.channel);
+        logger.info('No Room found for:', event.channel);
         const updatedEvent = await this.getRoomDetails(event);
         await this.createRoom(updatedEvent);
         return await this.updateRoomMemberships(updatedEvent.channel);
       }
     } catch (error) {
-      debug('Could not create space');
+      logger.info('Could not create space');
     }
   }
 
@@ -387,7 +384,7 @@ class Helpers {
     try {
       return await this.app.service('spaces').patch(event.channel, update);
     } catch (error) {
-      debug('Could not remove space');
+      logger.info('Could not remove space');
     }
   }
 
@@ -405,7 +402,7 @@ class Helpers {
       const question = await this.addAnswer(updatedMessage);
       return { space, question };
     } catch (error) {
-      console.error(error);
+      logger.error('Error handling answer for', message.channel);
     }
   }
 
@@ -486,7 +483,7 @@ class Helpers {
         $search: search
       };
     }
-    // console.log('Running Query: ', query);
+    // logger.info('Running Query: ', query);
     return this.app.service('questions').find({ query });
   }
 
@@ -513,7 +510,7 @@ class Helpers {
         return true;
       }
     } catch (error) {
-      console.error('Could not verify moderation rights');
+      logger.error('Could not verify moderation rights');
       return true;
     }
   }
@@ -525,7 +522,7 @@ class Helpers {
       };
       return this.app.service('spaces').patch(message.channel, update);
     } catch (error) {
-      console.error(
+      logger.error(
         'Could not update sticky message for space',
         message.channel
       );

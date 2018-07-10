@@ -1,8 +1,6 @@
-const logger = require('winston');
-const Debug = require('debug');
+const logger = require('../../../winston');
 const fs = require('fs');
 const path = require('path');
-const debug = Debug('botkit:skills:question');
 const {
   formatGroupAnswer,
   formatGroupQuestion,
@@ -10,6 +8,7 @@ const {
   formatPersonQuestion
 } = require('../templates/responses');
 
+// eslint-disable-next-line no-unused-vars
 const mdError = fs.readFileSync(
   path.resolve(__dirname, '../templates/error.md'),
   'utf8'
@@ -17,28 +16,35 @@ const mdError = fs.readFileSync(
 
 module.exports = function(controller) {
   // remove html formatting for Spark Messages
+  // eslint-disable-next-line no-useless-escape
   const reg1 = /(\<p\>)/i;
+  // eslint-disable-next-line no-useless-escape
   const reg2 = /(\<\/p\>)/i;
+  // eslint-disable-next-line no-useless-escape
   const reg3 = /(\<spark\-mention\sdata\-object\-type\=\"person\"\sdata\-object\-id=\"([a-zA-Z0-9\-]*)\"\>)/gi;
+  // eslint-disable-next-line no-useless-escape
   const sparkMentionReverse = /(\<spark\-mention\sdata\-object\-id=\"([a-zA-Z0-9\-]*)\"\sdata\-object\-type\=\"person\"\>)/gi;
+  // eslint-disable-next-line no-useless-escape
   const reg4 = /(\<\/spark-mention\>)/gi;
   const reg5 = new RegExp(controller.bot_name, 'gi');
+  // eslint-disable-next-line no-useless-escape
   const regArray = [/(answer|\/a\/?)(?:\s+)?(\d+)\s+(?:\-\s+)?(.+.*)$/i];
+  // eslint-disable-next-line no-useless-escape
   const onBehalf = /(.*)\/b\s+\<spark\-mention\sdata\-object\-type\=\"person\"\sdata\-object\-id=\"([a-zA-Z0-9\-]*)\"\>.*\<\/spark-mention\>\s+(.*)/i;
+  // eslint-disable-next-line no-useless-escape
   const onBehalfReverse = /(.*)\/b\s+\<spark\-mention\sdata\-object\-id=\"([a-zA-Z0-9\-]*)\"\sdata\-object\-type\=\"person\"\>.*\<\/spark-mention\>\s+(.*)/i;
 
   // Handler for Answers
   controller.on('direct_mention', function(bot, message) {
-    logger.log('Received message: ', message.text);
+    logger.info('Received message: ', message.text);
     let match;
     for (let reg of regArray) {
       match = reg.exec(message.text);
       if (match) break;
     }
 
-    logger.log('RegEx Match: ', match);
+    logger.info('RegEx Match: ', match);
     let link = controller.public_address + '/#/space/' + message.channel;
-    let mdLink = `[here](${link})`;
     let filterHtml;
     if (message.html) {
       message.raw_html = message.html;
@@ -52,11 +58,11 @@ module.exports = function(controller) {
       message.html = filterHtml;
     }
     if (match) {
-      console.log('Handling Answer message', message.text);
+      logger.info('Handling Answer message', message.text);
       controller.utils
         .handleAnswer(message)
         .then(({ question, space }) => {
-          debug('Handled Answer');
+          logger.info('Handled Answer');
           let questioner = question.personId;
           const sequence = question.sequence;
           const answerer =
@@ -79,20 +85,21 @@ module.exports = function(controller) {
               text: answerMessage,
               markdown: answerMessage
             },
+            // eslint-disable-next-line no-unused-vars
             (err, message) => {
-              if (err) console.error(err);
-              debug('Answer sent successfully.');
+              if (err) logger.error(err);
+              logger.info('Answer sent successfully.');
             }
           );
 
           const mdMessage = formatGroupAnswer({ link });
-          debug('Received Answer');
+          logger.info('Received Answer');
           bot.reply(message, {
             markdown: mdMessage
           });
         })
         .catch(err => {
-          console.error(err);
+          logger.error(err);
           bot.reply(message, {
             markdown: 'Sorry there was an error processing your answer. '
           });
@@ -109,8 +116,7 @@ module.exports = function(controller) {
         message.text = behalfMatch[3];
         message.data.personId = behalfMatch[2];
       }
-      // debug( 'Debugging' )
-      // debug( message )
+
       controller.utils
         .handleQuestion(message)
         .then(result => {
@@ -132,13 +138,12 @@ module.exports = function(controller) {
               markdown: mdMessage
             });
             bot.startPrivateConversation(message, (error, convo) => {
-              if (error) console.error(error);
+              if (error) logger.error(error);
               convo.say({
                 text: personalMessage,
                 markdown: personalMessage
               });
             });
-            //   debug('Handled question successfully. ');
           } else {
             let errorMsg = 'Sorry there was an error processing your request.';
             bot.reply(message, {
@@ -147,7 +152,7 @@ module.exports = function(controller) {
           }
         })
         .catch(err => {
-          console.error(err);
+          logger.error(err);
           let errorMsg = 'Sorry there was an error processing your request. ';
           bot.reply(message, {
             markdown: errorMsg
@@ -197,7 +202,7 @@ module.exports = function(controller) {
             mdMessage = 'There are no unanswered questions in this Space.';
           }
           bot.startPrivateConversation(message, (error, convo) => {
-            if (error) console.error(error);
+            if (error) logger.error(error);
             convo.say({
               text: mdMessage,
               markdown: mdMessage
@@ -209,20 +214,20 @@ module.exports = function(controller) {
 
   controller.on('user_space_join', function(bot, data) {
     controller.utils.handleMembershipChange(data);
-    debug('Person Joined');
+    logger.info('Person Joined');
   });
   controller.on('user_space_leave', function(bot, data) {
     controller.utils.handleMembershipChange(data);
-    debug('Person Left');
+    logger.info('Person Left');
   });
 
   controller.on('bot_space_join', function(bot, data) {
-    debug('Bot joined space');
+    logger.info('Bot joined space');
     controller.utils.handleSpaceJoin(data);
   });
 
   controller.on('bot_space_leave', function(bot, data) {
-    debug('Bot left space');
+    logger.info('Bot left space');
     controller.utils.handleSpaceLeave(data);
   });
 };

@@ -4,6 +4,7 @@ const request = require('superagent');
 const createModel = require('../../models/questions.model');
 const hooks = require('./questions.hooks');
 const { formatPersonAnswer } = require('../botkit/templates/responses');
+const logger = require('../../winston');
 
 module.exports = function(app) {
   const Model = createModel(app);
@@ -42,9 +43,9 @@ module.exports = function(app) {
         updatedSpace = await context.app
           .service('spaces')
           .patch(spaceId, spaceData);
-        console.log('Successfully updated answer count for:', spaceId);
+        logger.info('Successfully updated answer count for:', spaceId);
       } catch (error) {
-        console.error('Could not update answer count');
+        logger.error('Could not update answer count');
       }
     }
     if (context.params && context.params.user && context.data.$push) {
@@ -79,7 +80,7 @@ module.exports = function(app) {
           .set('Authorization', `Bearer ${token}`)
           .send({ roomId: question._room, markdown: roomNotification });
       } catch (error) {
-        console.error('Could not send update message');
+        logger.error('Could not send update message');
       }
     } else if (!context.data.$push) {
       let markdown = `**Q #${question.sequence}** has been edited by __${
@@ -91,8 +92,7 @@ module.exports = function(app) {
           .set('Authorization', `Bearer ${token}`)
           .send({ roomId: question._room, markdown: markdown });
       } catch (error) {
-        console.error(error);
-        console.error('Could not send update message');
+        logger.error('Could not send update message');
       }
     }
   });
@@ -109,8 +109,7 @@ module.exports = function(app) {
           .set('Authorization', `Bearer ${token}`)
           .send({ roomId: question._room, markdown: markdown });
       } catch (error) {
-        console.error(error);
-        console.error('Could not send update message');
+        logger.error('Could not send update message');
       }
     }
   });
@@ -119,7 +118,8 @@ module.exports = function(app) {
     if (context.params && context.params.user) {
       const token = app.get('access_token');
       const markdown = `
-      <blockquote class="info">**Q #${question.sequence}** has been removed. 
+      <blockquote class="info">
+      <bold>Q #${question.sequence}</bold> has been removed. 
       </blockquote>
       `;
       try {
@@ -128,8 +128,7 @@ module.exports = function(app) {
           .set('Authorization', `Bearer ${token}`)
           .send({ roomId: question._room, markdown: markdown });
       } catch (error) {
-        console.error(error);
-        console.error('Could not send update message');
+        logger.error('Could not send update message');
       }
     }
   });
@@ -148,8 +147,8 @@ async function updateQuestionCount(question, context) {
       questionCount: result.total
     };
     await context.app.service('spaces').patch(spaceId, spaceData);
-    console.log('Successfully updated question count for:', spaceId);
+    logger.info('Successfully updated question count for:', spaceId);
   } catch (error) {
-    console.error('Could not update answer count');
+    logger.error('Could not update question count for:', question._room);
   }
 }

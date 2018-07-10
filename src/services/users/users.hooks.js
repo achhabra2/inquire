@@ -1,8 +1,9 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const hooks = require('feathers-authentication-hooks');
+const logger = require('../../winston');
 
 function customizeProfile(context) {
-  console.log('Customizing Profile');
+  logger.info('Customizing Profile');
 
   if (context.data.github) {
     context.data.displayName = context.data.github.profile.displayName;

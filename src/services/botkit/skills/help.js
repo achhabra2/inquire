@@ -4,6 +4,7 @@ const mdHelp = fs.readFileSync(
   path.resolve(__dirname, '../templates/help.md'),
   'utf8'
 );
+const logger = require('../../../winston');
 
 module.exports = function(controller) {
   // apiai.hears for intents. in this example is 'hello' the intent
@@ -22,7 +23,7 @@ module.exports = function(controller) {
     message
   ) {
     bot.startPrivateConversation(message, (error, convo) => {
-      if (error) console.error(error);
+      if (error) logger.error(error);
       convo.say({
         text: mdHelp,
         markdown: mdHelp

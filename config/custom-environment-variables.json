@@ -9,5 +9,7 @@
   "secret": "SECRET",
   "authentication": {
     "secret": "JWT_SECRET"
-  }
+  },
+  "pt_host": "PT_HOST",
+  "pt_port": "PT_PORT"
 }

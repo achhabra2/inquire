@@ -1,4 +1,5 @@
 const superagent = require('superagent');
+const logger = require('../../winston');
 
 module.exports = {
   publishWebhook
@@ -52,10 +53,10 @@ async function matchWebhookEvents(context) {
           .set('Accept', 'application/json')
           .send({ event, resource, data });
       } catch (error) {
-        console.log('Could not post event to webhook url. ');
+        logger.error('Could not post event to webhook url. ');
       }
     }
   } catch (error) {
-    console.log('Error in match webhook event');
+    logger.error('Error in match webhook event');
   }
 }

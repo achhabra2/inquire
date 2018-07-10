@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.2.0/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.16ecb2f71e375f00640c2d3370a1513a.js"
+  "/precache-manifest.0cacfcaeebe47a170a7272a16a125ae6.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "inquire-ui-v2"});
