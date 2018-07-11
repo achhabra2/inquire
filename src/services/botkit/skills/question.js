@@ -213,21 +213,21 @@ module.exports = function(controller) {
   );
 
   controller.on('user_space_join', function(bot, data) {
-    controller.utils.handleMembershipChange(data);
-    logger.info('Person Joined');
+    controller.utils.handleSpaceJoin(data);
+    logger.info('Person Joined', data.channel);
   });
   controller.on('user_space_leave', function(bot, data) {
-    controller.utils.handleMembershipChange(data);
-    logger.info('Person Left');
+    controller.utils.handleSpaceJoin(data);
+    logger.info('Person Left', data.channel);
   });
 
   controller.on('bot_space_join', function(bot, data) {
-    logger.info('Bot joined space');
+    logger.info('Bot joined space', data.channel);
     controller.utils.handleSpaceJoin(data);
   });
 
   controller.on('bot_space_leave', function(bot, data) {
-    logger.info('Bot left space');
+    logger.info('Bot left space:', data.channel);
     controller.utils.handleSpaceLeave(data);
   });
 };

@@ -61,3 +61,5 @@ Set the following environment variables:
 | STUDIO_TOKEN   | BotKit Studio Token from **(3)**                   |
 | SECRET         | Webhook Token Secret                               |
 | JWT_SECRET     | Secret used to sign JWT                            |
+| PT_HOST        | PaperTrail Logging Host                            |
+| PT_PORT        | PaperTrail Logging Port                            |

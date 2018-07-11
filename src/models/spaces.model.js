@@ -22,8 +22,14 @@ module.exports = function(app) {
       type: Number,
       default: '0'
     },
-    answerCount: Number,
-    questionCount: Number,
+    answerCount: {
+      type: Number,
+      default: '0'
+    },
+    questionCount: {
+      type: Number,
+      default: '0'
+    },
     sticky: String,
     tags: String,
     teamId: String,

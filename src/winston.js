@@ -35,7 +35,7 @@ const options = {
     colorize: false
   },
   console: {
-    level: 'warn',
+    level: 'info',
     handleExceptions: true,
     json: false,
     colorize: true

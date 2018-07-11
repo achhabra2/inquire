@@ -3287,18 +3287,18 @@ moment@2.x.x, moment@^2.10.3:
   version "2.22.2"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
 
-mongodb-core@3.0.9:
-  version "3.0.9"
-  resolved "https://registry.yarnpkg.com/mongodb-core/-/mongodb-core-3.0.9.tgz#8327410c88811013fb3e4ac7c4c670f324349be1"
+mongodb-core@3.0.11:
+  version "3.0.11"
+  resolved "https://registry.yarnpkg.com/mongodb-core/-/mongodb-core-3.0.11.tgz#737c496119aebbf3548d3fc7553266e56c826c77"
   dependencies:
     bson "~1.0.4"
     require_optional "^1.0.1"
 
-mongodb@3.0.10:
-  version "3.0.10"
-  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-3.0.10.tgz#f948cb9595adcbfcad7444f6b24a040b653b23e8"
+mongodb@3.0.11:
+  version "3.0.11"
+  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-3.0.11.tgz#f09163b8928e8eb2fc0240b5a0e557e806947954"
   dependencies:
-    mongodb-core "3.0.9"
+    mongodb-core "3.0.11"
 
 mongoose-legacy-pluralize@1.0.2:
   version "1.0.2"
@@ -3310,15 +3310,15 @@ mongoose-paginate@^5.0.3:
   dependencies:
     bluebird "3.0.5"
 
-mongoose@^5.0.11:
-  version "5.1.7"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.1.7.tgz#b13463278cc455b3e19031b96cde9c2010095f6c"
+mongoose@5.1.8:
+  version "5.1.8"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.1.8.tgz#c7a80f070e312269fbe1f3002792aad2f4d5885b"
   dependencies:
     async "2.6.1"
     bson "~1.0.5"
     kareem "2.2.1"
     lodash.get "4.4.2"
-    mongodb "3.0.10"
+    mongodb "3.0.11"
     mongoose-legacy-pluralize "1.0.2"
     mpath "0.4.1"
     mquery "3.0.0"
@@ -4978,8 +4978,8 @@ winston-papertrail@^1.0.5:
     glossy "^0.1.7"
 
 winston@^2.4.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/winston/-/winston-2.4.1.tgz#a3a9265105564263c6785b4583b8c8aca26fded6"
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/winston/-/winston-2.4.3.tgz#7a9fdab371b6d3d9b63a592947846d856948c517"
   dependencies:
     async "~1.0.0"
     colors "1.0.x"

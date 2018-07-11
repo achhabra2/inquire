@@ -146,10 +146,10 @@ class Helpers {
    */
   async handleMembershipChange(data) {
     try {
-      const room = await this.checkRoom(data);
+      await this.app.service('spaces').get(data.channel);
       return this.updateRoomMemberships(data.channel);
     } catch (error) {
-      logger.error('Existing room not found: ', data.channel);
+      logger.warn('Existing room not found: ', data.channel);
       return null;
     }
   }
@@ -333,7 +333,7 @@ class Helpers {
     logger.info('Incoming message is:', message.text);
     let updatedMessage;
     try {
-      const room = await this.checkRoom(message);
+      const room = await this.app.service('spaces').get(message.channel);
       logger.info('Found Room: ', room._id);
       updatedMessage = await this.getUserDetails(message);
       return this.addQuestion(updatedMessage, room);
@@ -355,7 +355,7 @@ class Helpers {
   async handleSpaceJoin(event) {
     try {
       try {
-        const room = await this.checkRoom(event);
+        const room = await this.app.service('spaces').get(event.channel);
         if (room) {
           await this.updateRoomMemberships(event.channel);
           const update = { active: true };
