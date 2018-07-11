@@ -19,7 +19,8 @@ module.exports = function() {
     }
 
     if (context.error) {
-      logger.error(context.error);
+      if (context.error.code === 404) logger.warn(context.error.stack);
+      else logger.error(context.error.stack);
     }
   };
 };

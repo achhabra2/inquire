@@ -17,12 +17,11 @@ if (process.env.PT_PORT && process.env.PT_HOST) {
     handleExceptions: true,
     colorize: true
   });
+  // eslint-disable-next-line no-unused-vars
+  winstonPapertrail.on('error', function(err) {
+    // Handle, report, or silently ignore connection errors and failures
+  });
 }
-
-// eslint-disable-next-line no-unused-vars
-winstonPapertrail.on('error', function(err) {
-  // Handle, report, or silently ignore connection errors and failures
-});
 
 const options = {
   file: {

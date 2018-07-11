@@ -35,7 +35,7 @@ async function matchWebhookEvents(context) {
     if (resource === 'spaces') {
       match = context.result._id;
     } else if (resource === 'questions') {
-      if (Array.isArray(data)) {
+      if (Array.isArray(data) && data.length > 0) {
         match = data[0]._room;
       } else {
         match = data._room;

@@ -138,19 +138,23 @@ class Helpers {
   }
 
   /**
+   * Check if space exists in database
    *
-   *
-   * @param {any} data
-   * @returns
+   * @param {string} spaceId Webex Teams Space ID
+   * @returns {boolean} True if Space exists, False if not
    * @memberof Helpers
    */
-  async handleMembershipChange(data) {
-    try {
-      await this.app.service('spaces').get(data.channel);
-      return this.updateRoomMemberships(data.channel);
-    } catch (error) {
-      logger.warn('Existing room not found: ', data.channel);
-      return null;
+  async roomExists(spaceId) {
+    const query = {
+      _id: spaceId
+    };
+    const result = await this.app.service('spaces').find({ query });
+    if (result.total === 0 && result.data.length === 0) {
+      return false;
+    } else if (result.total === 1 && result.data[0]._id === spaceId) {
+      return true;
+    } else {
+      throw new Error('Could not verify if space exists in database');
     }
   }
 
@@ -226,17 +230,6 @@ class Helpers {
     const space = await this.app.service('spaces').patch(room._id, room);
     const record = await this.app.service('questions').create(question);
     return { question: record, space };
-  }
-
-  /**
-   * Create a new room object
-   *
-   * @param {any} message
-   * @returns
-   * @memberof Helpers
-   */
-  checkRoom(message) {
-    return this.app.service('spaces').get(message.channel);
   }
 
   /**
@@ -353,22 +346,23 @@ class Helpers {
    * @memberof Helpers
    */
   async handleSpaceJoin(event) {
+    logger.debug(`Handling Space Join Event for: ${event.channel}`);
     try {
-      try {
-        const room = await this.app.service('spaces').get(event.channel);
-        if (room) {
-          await this.updateRoomMemberships(event.channel);
-          const update = { active: true };
-          return await this.app.service('spaces').patch(event.channel, update);
-        }
-      } catch (error) {
+      const exists = await this.roomExists(event.channel);
+      if (exists) {
+        logger.debug('Space Exists');
+        await this.updateRoomMemberships(event.channel);
+        const update = { active: true };
+        return await this.app.service('spaces').patch(event.channel, update);
+      } else {
+        logger.debug('Space Does Not Exist');
         logger.info('No Room found for:', event.channel);
         const updatedEvent = await this.getRoomDetails(event);
         await this.createRoom(updatedEvent);
         return await this.updateRoomMemberships(updatedEvent.channel);
       }
     } catch (error) {
-      logger.info('Could not create space');
+      logger.error(`Could not create space: ${event.channel}`);
     }
   }
 
@@ -384,7 +378,7 @@ class Helpers {
     try {
       return await this.app.service('spaces').patch(event.channel, update);
     } catch (error) {
-      logger.info('Could not remove space');
+      logger.info('Could not mark space inactive');
     }
   }
 

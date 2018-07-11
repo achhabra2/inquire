@@ -14,6 +14,7 @@ describe('Utils Tests', () => {
   before(async function() {
     await app.service('questions').remove(null, {});
     await app.service('spaces').remove(null, {});
+    await app.service('webhooks').remove(null, {});
     await app.service('spaces').create(mockSpace);
   });
 
@@ -44,12 +45,21 @@ describe('Utils Tests', () => {
     updatedSpace.should.have.property('memberships');
   });
 
-  it('Should handle membership change event', async () => {
+  it('Should handle space join event', async () => {
     const data = {
       channel: mockSpace._id
     };
-    const space = await helpers.handleMembershipChange(data);
+    const space = await helpers.handleSpaceJoin(data);
     space.should.be.an('object');
+  });
+
+  it('Should handle space leave event', async () => {
+    const data = {
+      channel: mockSpace._id
+    };
+    const space = await helpers.handleSpaceLeave(data);
+    space.should.be.an('object');
+    space.active.should.equal(false);
   });
 
   it('Can attach user details to botkit message', async () => {
@@ -74,6 +84,7 @@ describe('Utils Tests', () => {
     before(async function() {
       await app.service('questions').remove(null, {});
       await app.service('spaces').remove(null, {});
+      await helpers.handleSpaceJoin(mockQuestion);
     });
 
     it('Can handle an incoming question from a botkit message', async () => {
@@ -107,6 +118,7 @@ describe('Utils Tests', () => {
     before(async function() {
       await app.service('questions').remove(null, {});
       await app.service('spaces').remove(null, {});
+      await helpers.handleSpaceJoin(mockQuestion);
       await helpers.handleQuestion(mockQuestion);
     });
 
@@ -125,6 +137,7 @@ describe('Utils Tests', () => {
     before(async function() {
       await app.service('questions').remove(null, {});
       await app.service('spaces').remove(null, {});
+      await helpers.handleSpaceJoin(mockQuestion);
       await helpers.handleQuestion(mockQuestion);
       await helpers.handleQuestion(mockQuestion);
       await helpers.handleAnswer(mockAnswer);
