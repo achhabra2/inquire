@@ -244,7 +244,8 @@ class Helpers {
       _id: message.channel,
       orgId: message.orgId,
       displayName: message.roomTitle || 'Unknown',
-      active: true
+      active: true,
+      createdOn: Date.now()
     };
     if (message.roomTeamId) {
       newRoom.teamId = message.roomTeamId;
