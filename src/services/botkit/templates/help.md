@@ -18,7 +18,7 @@
   </li>
 </ul>
 <p>✅
-  <strong>Answer: @Inquire /a 7</strong>
+  <strong>Answer: @Inquire /a [Question Number]</strong>
 </p>
 <ul>
   <li>/a or answer Type in answer or /a followed by the question number followed by your response to answer an open question.</li>
@@ -78,6 +78,6 @@
   <strong>More questions or feedback?</strong>
 </p>
 <ul>
-  <li>🔗 For more details or issues, head over <a href="https://inquire.sparkadmins.com/#/help">here</a>.</li>
+  <li>🔗 For a detailed how to guide and training video, head over <a href="https://inquire.sparkadmins.com/#/help">here</a>.</li>
   <li>🐦 Say hi on Twitter! @CiscoWebexAmb @Webex</li>
 </ul>

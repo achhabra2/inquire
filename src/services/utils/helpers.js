@@ -191,6 +191,7 @@ class Helpers {
         .get(`https://api.ciscospark.com/v1/rooms/${message.channel}`)
         .set('Authorization', `Bearer ${this.app.get('access_token')}`);
       const room = response.body;
+      message.space = room;
       message.roomTitle = room.title;
       if (room.teamId) message.roomTeamId = room.teamId;
       return message;
@@ -359,8 +360,12 @@ class Helpers {
         logger.debug('Space Does Not Exist');
         logger.info('No Room found for:', event.channel);
         const updatedEvent = await this.getRoomDetails(event);
-        await this.createRoom(updatedEvent);
-        return await this.updateRoomMemberships(updatedEvent.channel);
+        if (updatedEvent.space && updatedEvent.space.type !== 'direct') {
+          await this.createRoom(updatedEvent);
+          return await this.updateRoomMemberships(updatedEvent.channel);
+        } else {
+          return null;
+        }
       }
     } catch (error) {
       logger.error(`Could not create space: ${event.channel}`);

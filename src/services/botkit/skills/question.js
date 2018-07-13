@@ -212,22 +212,46 @@ module.exports = function(controller) {
     }
   );
 
-  controller.on('user_space_join', function(bot, data) {
-    controller.utils.handleSpaceJoin(data);
-    logger.info('Person Joined', data.channel);
+  const joinMessage = space => {
+    return `
+    👋 Welcome to \`${space}\`! This space currently uses me, the **Inquire** bot, to capture questions and answers you may have. If you have never used me before, please ask me for help. Happy FAQing! 
+    `;
+  };
+
+  controller.on('user_space_join', async function(bot, event) {
+    try {
+      const space = await controller.utils.handleSpaceJoin(event);
+      if (space) {
+        const reply = joinMessage(space.displayName);
+        bot.startPrivateConversationWithPersonId(
+          event.data.personId,
+          (err, convo) => {
+            if (err)
+              logger.error('Error Staring Private Conversation on User Join');
+            convo.say({
+              text: reply,
+              markdown: reply
+            });
+          }
+        );
+      }
+    } catch (error) {
+      logger.error('Did not properly handle user space join event');
+    }
+    logger.info('Person Joined', event.channel);
   });
-  controller.on('user_space_leave', function(bot, data) {
-    controller.utils.handleSpaceJoin(data);
-    logger.info('Person Left', data.channel);
+  controller.on('user_space_leave', function(bot, event) {
+    controller.utils.handleSpaceJoin(event);
+    logger.info('Person Left', event.channel);
   });
 
-  controller.on('bot_space_join', function(bot, data) {
-    logger.info('Bot joined space', data.channel);
-    controller.utils.handleSpaceJoin(data);
+  controller.on('bot_space_join', function(bot, event) {
+    logger.info('Bot joined space', event.channel);
+    controller.utils.handleSpaceJoin(event);
   });
 
-  controller.on('bot_space_leave', function(bot, data) {
-    logger.info('Bot left space:', data.channel);
-    controller.utils.handleSpaceLeave(data);
+  controller.on('bot_space_leave', function(bot, event) {
+    logger.info('Bot left space:', event.channel);
+    controller.utils.handleSpaceLeave(event);
   });
 };
