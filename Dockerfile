@@ -4,6 +4,9 @@ FROM node:carbon
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
+# Set NODE_ENV to production
+ENV NODE_ENV production
+
 # Bundle app source
 COPY . /usr/src/app
 

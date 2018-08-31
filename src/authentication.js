@@ -13,6 +13,7 @@ module.exports = function(app) {
   app.configure(jwt());
 
   let scopes;
+
   if (app.get('env') === 'production') {
     scopes = [
       'spark:messages_write',
@@ -27,7 +28,6 @@ module.exports = function(app) {
       'spark:rooms_read',
       'spark:teams_read'
     ];
-    // scopes = ['spark:all'];
   }
   app.configure(
     oauth2(

@@ -1,5 +1,6 @@
 {
   "public_address": "PUBLIC_ADDRESS",
+  "host": "HOST",
   "access_token": "ACCESS_TOKEN",
   "mongodb": "MONGODB_URI",
   "oauth_client": "OAUTH_CLIENT",

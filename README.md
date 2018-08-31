@@ -63,3 +63,4 @@ Set the following environment variables:
 | JWT_SECRET     | Secret used to sign JWT                            |
 | PT_HOST        | PaperTrail Logging Host                            |
 | PT_PORT        | PaperTrail Logging Port                            |
+| HOST           | Hostname for your server                           |
