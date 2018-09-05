@@ -66,6 +66,7 @@ module.exports = function(app) {
         question.sequence
       }** has been answered by <@personEmail:${answerer}>: `;
       if (answerText.length < 160) {
+        roomNotification += `<blockquote class="danger">${questionText}</blockquote>`;
         roomNotification += `<blockquote class="success">${answerText}</blockquote>`;
       } else {
         roomNotification += `click [here](${link}) to view.`;

@@ -92,7 +92,7 @@ module.exports = function(controller) {
             }
           );
 
-          const mdMessage = formatGroupAnswer({ link });
+          const mdMessage = formatGroupAnswer({ link, question: questionText });
           logger.info('Received Answer');
           bot.reply(message, {
             markdown: mdMessage

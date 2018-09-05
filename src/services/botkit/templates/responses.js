@@ -11,10 +11,9 @@ module.exports = {
  * @param {string} { link }
  * @returns {string}
  */
-function formatGroupAnswer({ link }) {
+function formatGroupAnswer({ link, question }) {
   const message = `
-  <blockquote class="info">Answer logged. Click <a href="${link}">here</a> to view all FAQ.</blockquote>
-  `;
+  <blockquote class="info"><p>Answer logged. Click <a href="${link}">here</a> to view all FAQ.</p></blockquote><blockquote class="danger"><p>${question}</p></blockquote>`;
   return message;
 }
 
