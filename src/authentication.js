@@ -23,11 +23,17 @@ module.exports = function(app) {
     ];
   } else {
     scopes = [
-      'spark:people_read',
-      'spark:messages_read',
+      'spark:messages_write',
       'spark:rooms_read',
+      'spark:people_read',
       'spark:teams_read'
     ];
+    // scopes = [
+    //   'spark:people_read',
+    //   'spark:messages_read',
+    //   'spark:rooms_read',
+    //   'spark:teams_read'
+    // ];
   }
   app.configure(
     oauth2(
