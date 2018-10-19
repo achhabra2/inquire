@@ -27,7 +27,7 @@
     "access_token": {
       "description": "Cisco Webex Teams Bot Access Token"
     },
-    "mongo": {
+    "mongodb_uri": {
       "description": "Mongo DB Connection String",
       "required": false
     },
