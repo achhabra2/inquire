@@ -31,9 +31,9 @@ You will need the following:
 - Save your Oauth Client ID and Client Secret _(required)_
 - For the **Redirect URI** put in:
 
-  _https://**{YOUR-APP-FQDN}**/auth/redirect_  
+  _https://**{YOUR-APP-FQDN}**/auth/ciscospark/callback_  
   OR  
-  _https://**{HEROKU-APP-NAME}**.herokuapp.com/auth/redirect_ (Heroku Deploy)
+  _https://**{HEROKU-APP-NAME}**.herokuapp.com/auth/ciscospark/callback_ (Heroku Deploy)
 
 - You will need these permissions:
   - `spark:people_read` Read your users’ company directory
