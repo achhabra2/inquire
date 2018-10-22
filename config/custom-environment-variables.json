@@ -12,5 +12,6 @@
     "secret": "JWT_SECRET"
   },
   "pt_host": "PT_HOST",
-  "pt_port": "PT_PORT"
+  "pt_port": "PT_PORT",
+  "port": "PORT"
 }
