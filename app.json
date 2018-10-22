@@ -14,46 +14,46 @@
     "Teams"
   ],
   "env": {
-    "bot_name": {
+    "BOT_NAME": {
       "description": "Name of your Cisco Webex Teams"
     },
-    "public_address": {
+    "PUBLIC_ADDRESS": {
       "description": "Publicly accessible FDQN of the application. If Heroku use the full URL (eg. https://{APPNAME}.herokuapp.com"
     },
-    "host": {
+    "HOST": {
       "description": "Hostname where your app resides for auth purposes. ",
       "required": true
     },
-    "access_token": {
+    "ACCESS_TOKEN": {
       "description": "Cisco Webex Teams Bot Access Token"
     },
-    "mongodb_uri": {
+    "MONGODB_URI": {
       "description": "Mongo DB Connection String",
       "required": false
     },
-    "oauth_client": {
+    "OAUTH_CLIENT": {
       "description": "Oauth Client ID from Cisco Spark"
     },
-    "oauth_secret": {
+    "OAUTH_SECRET": {
       "description": "Oauth Client Secret from Cisco Spark"
     },
-    "studio_token": {
+    "STUDIO_TOKEN": {
       "description": "BotKit Studio Access Token",
       "required": false
     },
-    "secret": {
+    "SECRET": {
       "description": "Webhook Secret",
       "required": true
     },
-    "jwt_secret": {
+    "JWT_SECRET": {
       "description": "Secret used to sign JWTs",
       "required": true
     },
-    "pt_host": {
+    "PT_HOST": {
       "description": "Papertrail logging hostname",
       "required": false
     },
-    "pt_port": {
+    "PT_PORT": {
       "description": "Papertrail logging port",
       "required": false
     }
