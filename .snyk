@@ -1,0 +1,116 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.14.1
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  SNYK-JS-LODASH-567746:
+    - '@feathersjs/socketio > @feathersjs/transport-commons > lodash':
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > async > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - mongoose > async > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > requestretry > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > twilio > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > vorpal > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > jfs > async > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/media-engine-webrtc > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/spark-core > ampersand-events > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > ampersand-collection > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > ampersand-state > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > ampersand-collection-lodash-mixin > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > ampersand-collection > ampersand-class-extend > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > ampersand-collection > ampersand-events > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > ampersand-state > ampersand-events > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/media-engine-webrtc > ampersand-events > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/storage-adapter-local-storage > @ciscospark/spark-core > ampersand-collection > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/storage-adapter-local-storage > @ciscospark/spark-core > ampersand-state > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-feature > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/storage-adapter-local-storage > @ciscospark/spark-core > ampersand-collection > ampersand-class-extend > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/storage-adapter-local-storage > @ciscospark/spark-core > ampersand-collection > ampersand-events > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/storage-adapter-local-storage > @ciscospark/spark-core > ampersand-state > ampersand-events > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/spark-core > ampersand-events > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > ampersand-collection > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > ampersand-state > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > ampersand-collection > ampersand-class-extend > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > ampersand-collection > ampersand-events > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > ampersand-state > ampersand-events > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/spark-core > ampersand-events > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-wdm > ampersand-collection > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-wdm > ampersand-state > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > @ciscospark/spark-core > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-wdm > ampersand-collection > ampersand-class-extend > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-wdm > ampersand-collection > ampersand-events > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-wdm > ampersand-state > ampersand-events > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-metrics > @ciscospark/spark-core > ampersand-events > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > ampersand-collection > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > ampersand-state > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > @ciscospark/spark-core > @ciscospark/http-core > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > ampersand-collection > ampersand-class-extend > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > ampersand-collection > ampersand-events > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > ampersand-state > ampersand-events > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > @ciscospark/spark-core > ampersand-events > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > @ciscospark/spark-core > ampersand-collection > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > @ciscospark/spark-core > ampersand-state > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > @ciscospark/spark-core > @ciscospark/http-core > @ciscospark/common > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > @ciscospark/spark-core > ampersand-collection > ampersand-class-extend > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > @ciscospark/spark-core > ampersand-collection > ampersand-events > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - botkit > ciscospark > @ciscospark/plugin-phone > @ciscospark/internal-plugin-locus > @ciscospark/internal-plugin-mercury > @ciscospark/internal-plugin-metrics > @ciscospark/internal-plugin-wdm > @ciscospark/spark-core > ampersand-state > ampersand-events > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - feathers-authentication-hooks > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
+    - request-promise > request-promise-core > lodash:
+        patched: '2020-05-04T03:26:18.570Z'
