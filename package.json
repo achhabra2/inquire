@@ -63,7 +63,7 @@
     "passport-cisco-spark": "^1.0.3",
     "passport-github": "^1.1.0",
     "passport-oauth2": "^1.4.0",
-    "request": "^2.85.0",
+    "request": "^2.88.0",
     "request-promise": "^4.2.2",
     "serve-favicon": "^2.4.5",
     "superagent": "^3.8.2",
