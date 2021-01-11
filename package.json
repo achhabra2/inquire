@@ -49,7 +49,7 @@
     "@feathersjs/socketio": "^3.2.0",
     "anchorme": "^1.1.2",
     "app-root-path": "^2.1.0",
-    "botkit": "0.6.16",
+    "botkit": "0.7.5",
     "compression": "^1.7.2",
     "cors": "^2.8.4",
     "debug": "^3.1.0",
